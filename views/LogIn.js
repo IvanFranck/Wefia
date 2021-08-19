@@ -1,8 +1,10 @@
 import React from "react";
-import { View, StatusBar, StyleSheet, Text, Dimensions, TextInput, Alert, Pressable, Linking } from "react-native";
+import { View, StatusBar, StyleSheet, Text, Dimensions, TextInput, Alert, Pressable, KeyboardAvoidingView, Platform } from "react-native";
 import * as Font from "expo-font";
-import { Colors, Typography } from "../Style";
+import { Colors, Typography } from "../Style"
 
+
+import InputText from "../components/InputText";
 export default class LogIn extends React.Component {
 
     constructor(props) {
@@ -40,14 +42,16 @@ export default class LogIn extends React.Component {
                         backgroundColor={Colors.bgColor}
                     />
                     <Text style={[styles.logo, Typography.title]}>Wefia</Text>
-                    <View style={styles.main}>
+                    <KeyboardAvoidingView
+                        behavior="padding"
+                        style={styles.main}
+                    >
                         <Text style={styles.mainText}>Bon retour parmi nous. Nous sommes content de vous revoir.</Text>
                         <Text style={styles.mainSubText}>Remplissez le formulaire ci-dessous pour continuer.</Text>
+
                         <View style={styles.form}>
-                            <TextInput
-                                style={styles.input}
+                            <InputText
                                 placeholder="Adresse mail"
-                                selectionColor={Colors.primary}
                                 keyboardType="email-address"
                             />
                             <TextInput
@@ -63,13 +67,14 @@ export default class LogIn extends React.Component {
                                 <Text style={[styles.btnText, { color: Colors.white }]}>Se Connecter</Text>
                             </Pressable>
                         </View>
+
                         <View style={styles.bottom}>
 
                             <Text style={[styles.bottomText, { textDecorationLine: 'underline', paddingBottom: 8 }]}>Mot de passe oublié ?</Text>
                             <View style={styles.forgetPassGroup}>
                                 <Text style={styles.bottomText}>Vous n'avez pas de compte ?</Text>
                                 <Pressable
-                                    
+
                                     onPress={() => Alert.alert("S'inscrire")}
                                 >
                                     <Text style={styles.link}>Inscrivez-vous.</Text>
@@ -77,7 +82,7 @@ export default class LogIn extends React.Component {
                             </View>
                         </View>
 
-                    </View>
+                    </KeyboardAvoidingView>
                 </View>
             )
         } else {
@@ -175,7 +180,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "flex-start",
     },
-    link : {
+    link: {
         paddingLeft: 2,
         letterSpacing: 0.2,
         fontFamily: "Montserrat_Regular",

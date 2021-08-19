@@ -3,6 +3,8 @@ import { StyleSheet, Dimensions, View, Text, StatusBar, Pressable, Alert } from 
 import { Colors, Typography } from "../Style";
 import * as Font from "expo-font";
 
+import Container from "../components/container"
+
 
 
 export default class Welcome extends React.Component {

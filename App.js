@@ -3,11 +3,11 @@ import React from "react";
 import LogIn from './views/LogIn';
 import Welcome from "./views/Welcome";
 import SignUp from "./views/SignUp";
-import Page1 from "./views/signUp/Page1"
+import FirstStep from "./views/signUp/FirstStep"
 
 export default function App(){
 
   return (
-    <Page1 />
+    <FirstStep />
   )
 }
