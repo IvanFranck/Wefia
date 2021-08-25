@@ -4,7 +4,7 @@ import * as Font from "expo-font";
 import { Colors, Typography } from "../../Style";
 import InputText from "../../components/InputText";
 
-export default class FirstStep extends React.Component {
+export default class ProfilePicture extends React.Component {
 
     constructor(props) {
         super(props);
@@ -21,6 +21,13 @@ export default class FirstStep extends React.Component {
         this.setState({ fontLoaded: true });
     }
 
+    isSlideActive = (routeName) => {
+        if (this.props.route.name == routeName) {
+            return styles.indicatorActive
+        }
+        return styles.indicator
+    }
+
     componentDidMount() {
         this.loadFonts();
     }
@@ -31,62 +38,67 @@ export default class FirstStep extends React.Component {
         if (this.state.fontLoaded) {
 
             return (
-                <ScrollView>
-                    <View style={styles.container}>
-                        <StatusBar
-                            hidden={false}
-                            translucent={true}
-                            barStyle="dark-content"
-                            backgroundColor={Colors.bgColor}
-                        />
-                        <Text style={[styles.logo, Typography.title]}>Wefia</Text>
-                        <View style={styles.subTitle}>
-                            <Text style={[Typography.subTitle, { fontFamily: "Montserrat_Bold" }]}>Inscription</Text>
-                        </View>
-                        <View style={styles.main}>
 
-                            <View style={styles.form}>
+                <View style={styles.container}>
+                    <StatusBar
+                        hidden={false}
+                        translucent={true}
+                        barStyle="dark-content"
+                        backgroundColor={Colors.bgColor}
+                    />
+                    <Text style={[styles.logo, Typography.title]}>Wefia</Text>
+                    <View style={styles.subTitle}>
+                        <Text style={[Typography.subTitle, { fontFamily: "Montserrat_Bold" }]}>Inscription</Text>
+                    </View>
+                    <View style={styles.main}>
+
+                        <View style={styles.form}>
+                            <ScrollView contentContainerStyle={styles.formContainer}>
 
                                 <View style={styles.formGroup}>
-                                    <Text style={[Typography.default, { marginBottom: 8 ,fontFamily: "Montserrat_Regular" }]}>Nom</Text>
+                                    <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Nom</Text>
                                     <InputText
                                         placeholder="entrer votre nom"
                                     />
                                 </View>
                                 <View style={styles.formGroup}>
-                                    <Text style={[Typography.default, { marginBottom: 8 ,fontFamily: "Montserrat_Regular" }]}>Prénom</Text>
+                                    <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Prénom</Text>
                                     <InputText
                                         placeholder="entrer votre prénom"
                                     />
                                 </View>
                                 <View style={styles.formGroup}>
-                                    <Text style={[Typography.default, { marginBottom: 8 ,fontFamily: "Montserrat_Regular" }]}>Téléphone</Text>
+                                    <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Téléphone</Text>
                                     <InputText
                                         placeholder="entrer votre numéro de téléphone"
                                         keyboardType="numeric"
                                     />
                                 </View>
-                            </View>
 
-                            <View style={styles.btnContainer}>
-                                <Pressable
-                                    style={styles.btnSecondary}
-                                    onPress={() => Alert.alert("précédent")}
-                                >
-
-                                    <Text style={[styles.btnText, { color: Colors.primary }]}>Précédent</Text>
-                                </Pressable>
-                                <Pressable
-                                    style={styles.btnPrimary}
-                                    onPress={() => Alert.alert("OK")}
-                                >
-                                    <Text style={[styles.btnText, { color: Colors.white }]}>OK</Text>
-                                </Pressable>
-                            </View>
-
+                            </ScrollView>
                         </View>
+
+                        <View style={styles.btnContainer}>
+                            <Pressable
+                                style={styles.btnSecondary}
+                                onPress={() => this.props.navigation.navigate("Home")}
+                            >
+
+                                <Text style={[styles.btnText, { color: Colors.primary }]}>Précédent</Text>
+                            </Pressable>
+                            <Pressable
+                                style={styles.btnPrimary}
+                                onPress={() => this.props.navigation.navigate("Second")}
+                            >
+                                <Text style={[styles.btnText, { color: Colors.white }]}>OK</Text>
+                            </Pressable>
+                        </View>
+
+                        
+
                     </View>
-                </ScrollView>
+                </View>
+
             )
         } else {
             return null;
@@ -133,17 +145,23 @@ const styles = StyleSheet.create({
         height: 340,
         width: "100%"
     },
+    formContainer: {
+        flex: 1,
+        flexDirection: "column",
+        justifyContent: "space-between",
+    },
     formGroup: {
         flex: 1,
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "flex-start",
     },
+    
     btnContainer: {
         width: "100%",
         flexGrow: 0.3,
         flex: 1,
-        flexDirection: "row",
+        flexDirection: 'column',
         justifyContent: "space-between",
         alignItems: "center",
         paddingTop: 24
@@ -154,7 +172,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 15,
         borderRadius: 10,
-        backgroundColor: 'black',
+        backgroundColor: Colors.primary,
     },
     btnSecondary: {
         alignItems: 'center',
@@ -166,6 +184,5 @@ const styles = StyleSheet.create({
         fontSize: 16,
         lineHeight: 17,
         letterSpacing: 0.25,
-        fontFamily: "Montserrat_Regular"
     },
 })

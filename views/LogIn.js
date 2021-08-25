@@ -62,7 +62,7 @@ export default class LogIn extends React.Component {
                             />
                             <Pressable
                                 style={styles.btnLogin}
-                                onPress={() => Alert.alert("Se connecter")}
+                                onPress={() => Alert.alert("se connecter")}
                             >
                                 <Text style={[styles.btnText, { color: Colors.white }]}>Se Connecter</Text>
                             </Pressable>
@@ -75,7 +75,7 @@ export default class LogIn extends React.Component {
                                 <Text style={styles.bottomText}>Vous n'avez pas de compte ?</Text>
                                 <Pressable
 
-                                    onPress={() => Alert.alert("S'inscrire")}
+                                    onPress={() => this.props.navigation.navigate('SignUp')}
                                 >
                                     <Text style={styles.link}>Inscrivez-vous.</Text>
                                 </Pressable>

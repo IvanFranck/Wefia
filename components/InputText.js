@@ -2,7 +2,7 @@ import { TextInput, StyleSheet } from "react-native";
 import { Colors } from "../Style";
 import React from "react";
 
-export default function InputText({placeholder, keyboardType}) {
+export default function InputText({placeholder, keyboardType, secureTextEntry}) {
 
     return (
         <TextInput
@@ -10,6 +10,7 @@ export default function InputText({placeholder, keyboardType}) {
             selectionColor={Colors.primary}
             placeholder = {placeholder}
             keyboardType = {keyboardType}
+            secureTextEntry={secureTextEntry}
         />
     )
 }

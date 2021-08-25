@@ -9,8 +9,8 @@ import Container from "../components/container"
 
 export default class Welcome extends React.Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             fonatLoaded: false
         }
@@ -50,14 +50,14 @@ export default class Welcome extends React.Component {
                     <View style={styles.btnContainer}>
                         <Pressable
                             style={styles.btnPrimary}
-                            onPress={() => Alert.alert("Se connecter")}
+                            onPress={() => this.props.navigation.navigate("LogIn")}
                         >
                             <Text style={[styles.btnText, {color: "white"}]}>Se connecter</Text>
                         </Pressable>
                         <Text>Ou</Text>
                         <Pressable
                             style={styles.btnSecondary}
-                            onPress={() => Alert.alert("Se connecter")}
+                            onPress={() => this.props.navigation.navigate("SignUp")}
                         >
                             <Text style={[styles.btnText, {color: Colors.primary}]}>S'inscrire</Text>
                         </Pressable>
