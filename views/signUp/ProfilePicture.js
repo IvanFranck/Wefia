@@ -1,111 +1,122 @@
-import React from "react";
-import { View, ScrollView, StatusBar, StyleSheet, Text, Dimensions, Alert, Pressable } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, StatusBar, StyleSheet, Text, Dimensions, Pressable, Image, Alert } from "react-native";
 import * as Font from "expo-font";
+import * as ImagePicker from 'expo-image-picker';
 import { Colors, Typography } from "../../Style";
-import InputText from "../../components/InputText";
+import ShowProfileImage from "../../components/ShowProfileImage"
 
-export default class ProfilePicture extends React.Component {
+export default function ProfilePicture() {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            fontLoaded: false
-        }
-    }
+    // handle font loading state
+    const [fontLoaded, loadFont] = useState(false);
 
-    async loadFonts() {
-        await Font.loadAsync({
-            Montserrat_Bold: require("../../assets/fonts/MontserratBold.ttf"),
-            Montserrat_Regular: require("../../assets/fonts/MontserratRegular.ttf")
+    // handle profile uploaded image uri
+    const [image, setImage] = useState(null);
+
+    useEffect(() => {
+        (async () => {
+            await Font.loadAsync({
+                Montserrat_Bold: require("../../assets/fonts/MontserratBold.ttf"),
+                Montserrat_Regular: require("../../assets/fonts/MontserratRegular.ttf")
+            });
+            await loadFont(true);
+            if (Platform.OS !== 'web') {
+                const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+                if (status !== 'granted') {
+                    alert('Sorry, we need camera roll permissions to make this work!');
+                }
+            }
+        })();
+    }, []);
+
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 4],
+            quality: 1,
         });
-        this.setState({ fontLoaded: true });
-    }
 
-    isSlideActive = (routeName) => {
-        if (this.props.route.name == routeName) {
-            return styles.indicatorActive
+        console.log("reslut:", result);
+
+        if (!result.cancelled) {
+            setImage(result.uri)
         }
-        return styles.indicator
     }
 
-    componentDidMount() {
-        this.loadFonts();
-    }
+    if (fontLoaded) {
 
 
-    render() {
+        return (
 
-        if (this.state.fontLoaded) {
+            <View style={styles.container}>
+                <StatusBar
+                    hidden={false}
+                    translucent={true}
+                    barStyle="dark-content"
+                    backgroundColor={Colors.bgColor}
+                />
+                <Text style={[styles.logo, Typography.title]}>Wefia</Text>
 
-            return (
+                <View style={styles.main}>
 
-                <View style={styles.container}>
-                    <StatusBar
-                        hidden={false}
-                        translucent={true}
-                        barStyle="dark-content"
-                        backgroundColor={Colors.bgColor}
-                    />
-                    <Text style={[styles.logo, Typography.title]}>Wefia</Text>
                     <View style={styles.subTitle}>
-                        <Text style={[Typography.subTitle, { fontFamily: "Montserrat_Bold" }]}>Inscription</Text>
+                        <Text
+                            style=
+                            {
+                                [
+                                    Typography.subTitle,
+                                    { width: "100%", fontFamily: "Montserrat_Bold", textAlign: "center" }
+                                ]
+                            }
+                        >
+                            Ajoutez une photo de profil
+                        </Text>
+                        <Text
+                            style={{
+                                fontFamily: "Montserrat_Regular",
+                                color: Colors.secondary,
+                                letterSpacing: 0.2,
+                                marginTop: 4,
+                                textAlign: "center"
+                            }}
+
+                        >
+                            Aidez les autres à vous reconnaitre. Mettez une photo récente.
+                        </Text>
                     </View>
-                    <View style={styles.main}>
 
-                        <View style={styles.form}>
-                            <ScrollView contentContainerStyle={styles.formContainer}>
-
-                                <View style={styles.formGroup}>
-                                    <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Nom</Text>
-                                    <InputText
-                                        placeholder="entrer votre nom"
-                                    />
-                                </View>
-                                <View style={styles.formGroup}>
-                                    <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Prénom</Text>
-                                    <InputText
-                                        placeholder="entrer votre prénom"
-                                    />
-                                </View>
-                                <View style={styles.formGroup}>
-                                    <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Téléphone</Text>
-                                    <InputText
-                                        placeholder="entrer votre numéro de téléphone"
-                                        keyboardType="numeric"
-                                    />
-                                </View>
-
-                            </ScrollView>
-                        </View>
-
-                        <View style={styles.btnContainer}>
-                            <Pressable
-                                style={styles.btnSecondary}
-                                onPress={() => this.props.navigation.navigate("Home")}
-                            >
-
-                                <Text style={[styles.btnText, { color: Colors.primary }]}>Précédent</Text>
-                            </Pressable>
-                            <Pressable
-                                style={styles.btnPrimary}
-                                onPress={() => this.props.navigation.navigate("Second")}
-                            >
-                                <Text style={[styles.btnText, { color: Colors.white }]}>OK</Text>
-                            </Pressable>
-                        </View>
-
-                        
-
+                    <View style={styles.profilePictureIcon}>
+                        <ShowProfileImage imageUri={image} action={pickImage}/>
                     </View>
+
+                    <View style={styles.btnContainer}>
+                        <Pressable
+                            style={styles.btnPrimary}
+                            onPress={() => Alert.alert("image ajoutée")}
+                        >
+                            <Text style={[styles.btnText, { color: Colors.white }]}>Définir comme photo de profil</Text>
+                        </Pressable>
+                        <Pressable
+                            style={styles.btnSecondary}
+                            onPress={() => Alert.alert("passer")}
+                        >
+
+                            <Text style={[styles.btnText, { color: Colors.primary }]}>Passer cette étape</Text>
+                        </Pressable>
+                    </View>
+
+
+
                 </View>
+            </View>
 
-            )
-        } else {
-            return null;
-        }
+        )
+    } else {
+        return null;
     }
-
 };
+
 
 const styles = StyleSheet.create({
     container: {
@@ -127,7 +138,7 @@ const styles = StyleSheet.create({
         width: "100%",
         flexGrow: .1,
         justifyContent: "flex-start",
-        flexDirection: "row",
+        flexDirection: "column",
         alignItems: "flex-start"
     },
     main: {
@@ -141,36 +152,31 @@ const styles = StyleSheet.create({
         flexGrow: 0.1,
         fontFamily: "Montserrat_Bold",
     },
-    form: {
-        height: 340,
-        width: "100%"
-    },
-    formContainer: {
+    profilePictureIcon: {
+        marginTop: 16,
         flex: 1,
-        flexDirection: "column",
-        justifyContent: "space-between",
-    },
-    formGroup: {
-        flex: 1,
+        flexGrow: 0.9,
         flexDirection: "column",
         justifyContent: "center",
-        alignItems: "flex-start",
+        alignItems: "center",
+        width: "100%",
     },
-    
     btnContainer: {
         width: "100%",
-        flexGrow: 0.3,
+        flexGrow: 0.2,
         flex: 1,
         flexDirection: 'column',
-        justifyContent: "space-between",
+        justifyContent: "flex-end",
         alignItems: "center",
-        paddingTop: 24
+        paddingTop: 24,
     },
     btnPrimary: {
+        width: "100%",
         alignItems: 'center',
         justifyContent: 'center',
-        paddingVertical: 10,
+        paddingVertical: 15,
         paddingHorizontal: 15,
+        marginBottom: 8,
         borderRadius: 10,
         backgroundColor: Colors.primary,
     },

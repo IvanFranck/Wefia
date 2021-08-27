@@ -38,6 +38,7 @@ export default function SignUp() {
                     name="ProfilePicture"
                     component={ProfilePicture}
                 />
+                    
             </Stack.Navigator>
     )
 }

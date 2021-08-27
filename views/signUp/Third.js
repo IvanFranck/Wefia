@@ -116,7 +116,7 @@ export default class Third extends React.Component {
                             </Pressable>
                             <Pressable
                                 style={styles.btnPrimary}
-                                onPress={() => this.prorps.navigation.navigate("ProfilePicture")}
+                                onPress={() => this.props.navigation.navigate("ProfilePicture")}
                             >
                                 <Text style={[styles.btnText, { color: Colors.white }]}>S'inscrire</Text>
                             </Pressable>

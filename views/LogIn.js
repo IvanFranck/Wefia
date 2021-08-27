@@ -151,10 +151,10 @@ const styles = StyleSheet.create({
         width: "100%",
         paddingVertical: 15,
         borderRadius: 10,
-        textAlign: "center",
+        alignItems: "center",
         flex: 1,
-        flexDirection: "row",
-        flexGrow: 0.20,
+        flexDirection: "column",
+        flexGrow: 0.15,
         justifyContent: "center"
     },
     btnText: {
