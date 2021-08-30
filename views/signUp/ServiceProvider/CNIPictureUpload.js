@@ -2,12 +2,10 @@ import React, { useEffect, useState } from "react";
 import { View, StatusBar, StyleSheet, Text, Dimensions, Pressable, Alert } from "react-native";
 import * as Font from "expo-font";
 import * as ImagePicker from 'expo-image-picker';
-import { Colors, Typography } from "../../Style";
-import ShowProfileImage from "../../components/ShowProfileImage"
-import Camera from "../../components/SVG/Camera";
-import Gallery from "../../components/SVG/Gallery";
+import { Colors, Typography } from "../../../Style";
+import ShowProfileImage from "../../../components/ShowProfileImage"
 
-export default function ProfilePicture() {
+export default function CNIPictureUpload() {
 
     // handle font loading state
     const [fontLoaded, loadFont] = useState(false);
@@ -18,48 +16,28 @@ export default function ProfilePicture() {
     useEffect(() => {
         (async () => {
             await Font.loadAsync({
-                Montserrat_Bold: require("../../assets/fonts/MontserratBold.ttf"),
-                Montserrat_Regular: require("../../assets/fonts/MontserratRegular.ttf")
+                Montserrat_Bold: require("../../../assets/fonts/MontserratBold.ttf"),
+                Montserrat_Regular: require("../../../assets/fonts/MontserratRegular.ttf")
             });
             await loadFont(true);
-
+            if (Platform.OS !== 'web') {
+                const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+                if (status !== 'granted') {
+                    alert('Sorry, we need camera roll permissions to make this work!');
+                }
+            }
         })();
     }, []);
 
-    const pickImageFromGallery = async () => {
-
-        // take permission to access to user gallery
-        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== 'granted') {
-            alert("Désolé, mais Wefia a besoin d'acceder à votre gallery pour continuer!");
-        }
-
-
-        const result = await ImagePicker.launchImageLibraryAsync({
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [4, 4],
             quality: 1,
         });
 
-        if (!result.cancelled) {
-            setImage(result.uri)
-        }
-    }
-
-    const pickImageFromCamera = async () => {
-
-        // take permission to access to user camera
-        const { status } = await ImagePicker.requestCameraPermissionsAsync();
-        if (status !== 'granted') {
-            alert("Désolé, mais Wefia a besoin d'acceder à votre camera pour continuer!");
-        }
-
-        const result = await ImagePicker.launchCameraAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 4],
-        });
+        console.log("reslut:", result);
 
         if (!result.cancelled) {
             setImage(result.uri)
@@ -108,35 +86,9 @@ export default function ProfilePicture() {
                         </Text>
                     </View>
 
-
-                    {/* profil image */}
-
-                    <View style={styles.profilePicture}>
-                        <ShowProfileImage imageUri={image} />
+                    <View style={styles.profilePictureIcon}>
+                        <ShowProfileImage imageUri={image} action={pickImage}/>
                     </View>
-
-                    {/* end */}
-
-
-
-                    {/* btn file import */}
-                    <View style={styles.ulploadIconContainer}>
-                        <Pressable
-                            style={styles.ulploadIconCamera}
-                            onPress={pickImageFromCamera}
-                        >
-                            <Camera width={45} height={45} color={Colors.primary} />
-                            <Text style={[Typography.detail, { fontSize: 11 }]}>Prendre une photo</Text>
-                        </Pressable>
-                        <Pressable
-                            style={styles.ulploadIconGallery}
-                            onPress={pickImageFromGallery}
-                        >
-                            <Gallery width={45} height={45} color={Colors.primary} />
-                            <Text style={[Typography.detail, { fontSize: 11 }]}>Gallerie</Text>
-                        </Pressable>
-                    </View>
-                    {/* end */}
 
                     <View style={styles.btnContainer}>
                         <Pressable
@@ -200,36 +152,14 @@ const styles = StyleSheet.create({
         flexGrow: 0.1,
         fontFamily: "Montserrat_Bold",
     },
-    profilePicture: {
+    profilePictureIcon: {
         marginTop: 16,
         flex: 1,
-        flexGrow: 0.5,
+        flexGrow: 0.9,
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
-    },
-    ulploadIconContainer: {
-        flex: 1,
-        flexDirection: "row",
-        flexGrow: 0.2,
-        width: "100%",
-        justifyContent: "space-between",
-    },
-    ulploadIconCamera: {
-        flex: 1,
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        flexGrow: 0.4,
-
-    },
-    ulploadIconGallery: {
-        flex: 1,
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        flexGrow: 0.4
     },
     btnContainer: {
         width: "100%",

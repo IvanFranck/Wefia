@@ -45,14 +45,14 @@ export default class SignUp extends React.Component {
                         <View style={styles.btnContainer}>
                             <Pressable
                                 style={styles.btnPrimary}
-                                onPress={() => this.props.navigation.navigate("First")}
+                                onPress={() => this.props.navigation.navigate("First", {isServiceProvider: true})}
                             >
                                 <Text style={[styles.btnText, { color: "white" }]}>Prestataire de services</Text>
                             </Pressable>
                             <Text style={Typography.default}>Ou</Text>
                             <Pressable
                                 style={styles.btnSecondary}
-                                onPress={() => this.props.navigation.navigate("First")}
+                                onPress={() => this.props.navigation.navigate("First",{isServiceProvider: false})}
                             >
                                 <Text style={[styles.btnText, { color: Colors.primary }]}>Demandeur de services</Text>
                             </Pressable>

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { View, ScrollView, StatusBar, StyleSheet, CheckBox, Text, Dimensions, Alert, Pressable } from "react-native";
 import * as Font from "expo-font";
-import { Colors, Typography } from "../../Style";
-import SlideIndicator from "../../components/SlideIndicator";
-import InputText from "../../components/InputText";
+import { Colors, Typography } from "../../../Style";
+import SlideIndicator from "../../../components/SlideIndicator";
+import InputText from "../../../components/InputText";
+import InformationSVG from "../../../components/SVG/InformationSVG";
 
-export default function Third({ navigation, route }) {
+export default function Third_SP({ navigation, route }) {
 
 
 
@@ -18,8 +19,8 @@ export default function Third({ navigation, route }) {
     useEffect(() => {
         (async () => {
             await Font.loadAsync({
-                Montserrat_Bold: require("../../assets/fonts/MontserratBold.ttf"),
-                Montserrat_Regular: require("../../assets/fonts/MontserratRegular.ttf")
+                Montserrat_Bold: require("../../../assets/fonts/MontserratBold.ttf"),
+                Montserrat_Regular: require("../../../assets/fonts/MontserratRegular.ttf")
             });
             loadFont(true);
         })();
@@ -46,7 +47,14 @@ export default function Third({ navigation, route }) {
                     <View style={styles.form}>
                         <ScrollView contentContainerStyle={styles.formContainer}>
 
-
+                            <View style={styles.formGroup}>
+                                <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Numéro de contribuable </Text>
+                                <View style={styles.info}>
+                                    <InformationSVG width="16" height="16" color={Colors.secondary} />
+                                    <Text style={{ color: Colors.secondary, marginLeft: 4 }}>Ce champ est facultatif </Text>
+                                </View>
+                                <InputText />
+                            </View>
                             <View style={styles.formGroup}>
                                 <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Adresse mail</Text>
                                 <InputText
@@ -102,9 +110,9 @@ export default function Third({ navigation, route }) {
                         </Pressable>
                         <Pressable
                             style={styles.btnPrimary}
-                            onPress={() => navigation.navigate("ProfilePicture")}
+                            onPress={() => navigation.navigate("CNIPictureUpload")}
                         >
-                            <Text style={[styles.btnText, { color: Colors.white }]}>S'inscrire</Text>
+                            <Text style={[styles.btnText, { color: Colors.white }]}>OK </Text>
                         </Pressable>
 
                     </View>
@@ -154,7 +162,7 @@ const styles = StyleSheet.create({
         fontFamily: "Montserrat_Bold",
     },
     form: {
-        height: 340,
+        height: 400,
         width: "100%"
     },
     formContainer: {
@@ -167,6 +175,13 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "flex-start",
+    },
+    info: {
+        flex: 1,
+        flexDirection: "row",
+        width: "100%",
+        justifyContent: "flex-start",
+        flexGrow: 0.7
     },
     useConditionContainer: {
         flex: 1,
@@ -181,12 +196,12 @@ const styles = StyleSheet.create({
     },
     btnContainer: {
         width: "100%",
-        flexGrow: 0.3,
+        flexGrow: 0.8,
         flex: 1,
         flexDirection: "row",
         justifyContent: "space-between",
-        alignItems: "center",
-        paddingTop: 24
+        alignItems: "flex-start",
+        paddingTop: 24,
     },
     btnPrimary: {
         alignItems: 'center',

@@ -1,127 +1,98 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, ScrollView, StatusBar, StyleSheet, Text, Dimensions, Alert, Pressable } from "react-native";
 import * as Font from "expo-font";
 import { Colors, Typography } from "../../Style";
 import InputText from "../../components/InputText";
+import SlideIndicator from "../../components/SlideIndicator";
 
-export default class First extends React.Component {
+export default function First({route, navigation}) {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            fontLoaded: false
-        }
-    }
+    // handle the font loading state
+    const [fontLoaded, loadFont] = useState(false);
 
-    async loadFonts() {
-        await Font.loadAsync({
-            Montserrat_Bold: require("../../assets/fonts/MontserratBold.ttf"),
-            Montserrat_Regular: require("../../assets/fonts/MontserratRegular.ttf")
-        });
-        this.setState({ fontLoaded: true });
-    }
+    useEffect(() => {
+        (async () => {
+            await Font.loadAsync({
+                Montserrat_Bold: require("../../assets/fonts/MontserratBold.ttf"),
+                Montserrat_Regular: require("../../assets/fonts/MontserratRegular.ttf")
+            });
+            loadFont(true);
+        })();
+        console.log("is sp ", route.params.isServiceProvider);
 
-    isSlideActive = (routeName) => {
-        if (this.props.route.name == routeName) {
-            return styles.indicatorActive
-        }
-        return styles.indicator
-    }
+    }, [])
 
-    componentDidMount() {
-        this.loadFonts();
-    }
+    if (fontLoaded) {
 
+        return (
 
-    render() {
-
-        if (this.state.fontLoaded) {
-
-            return (
-
-                <View style={styles.container}>
-                    <StatusBar
-                        hidden={false}
-                        translucent={true}
-                        barStyle="dark-content"
-                        backgroundColor={Colors.bgColor}
-                    />
-                    <Text style={[styles.logo, Typography.title]}>Wefia</Text>
-                    <View style={styles.subTitle}>
-                        <Text style={[Typography.subTitle, { fontFamily: "Montserrat_Bold" }]}>Inscription</Text>
-                    </View>
-                    <View style={styles.main}>
-
-                        <View style={styles.form}>
-                            <ScrollView contentContainerStyle={styles.formContainer}>
-
-                                <View style={styles.formGroup}>
-                                    <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Nom</Text>
-                                    <InputText
-                                        placeholder="entrer votre nom"
-                                    />
-                                </View>
-                                <View style={styles.formGroup}>
-                                    <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Prénom</Text>
-                                    <InputText
-                                        placeholder="entrer votre prénom"
-                                    />
-                                </View>
-                                <View style={styles.formGroup}>
-                                    <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Téléphone</Text>
-                                    <InputText
-                                        placeholder="entrer votre numéro de téléphone"
-                                        keyboardType="numeric"
-                                    />
-                                </View>
-
-                            </ScrollView>
-                        </View>
-
-                        <View style={styles.btnContainer}>
-                            <Pressable
-                                style={styles.btnSecondary}
-                                onPress={() => this.props.navigation.navigate("Home")}
-                            >
-
-                                <Text style={[styles.btnText, { color: Colors.primary }]}>Précédent</Text>
-                            </Pressable>
-                            <Pressable
-                                style={styles.btnPrimary}
-                                onPress={() => this.props.navigation.navigate("Second")}
-                            >
-                                <Text style={[styles.btnText, { color: Colors.white }]}>OK</Text>
-                            </Pressable>
-                        </View>
-
-                        <View style={styles.containerIndicator}>
-                            <Pressable
-                                style={this.isSlideActive("First")}
-                                onPress={() => this.props.navigation.navigate("First")}
-                            >
-                            </Pressable>
-                            <Pressable
-                                style={this.isSlideActive("Second")}
-                                onPress={() => this.props.navigation.navigate("Second")}
-                            >
-                            </Pressable>
-                            <Pressable
-                                style={this.isSlideActive("Third")}
-                                onPress={() => this.props.navigation.navigate("Third")}
-                            >
-                            </Pressable>
-                        </View>
-
-                    </View>
+            <View style={styles.container}>
+                <StatusBar
+                    hidden={false}
+                    translucent={true}
+                    barStyle="dark-content"
+                    backgroundColor={Colors.bgColor}
+                />
+                <Text style={[styles.logo, Typography.title]}>Wefia</Text>
+                <View style={styles.subTitle}>
+                    <Text style={[Typography.subTitle, { fontFamily: "Montserrat_Bold" }]}>Inscription</Text>
                 </View>
+                <View style={styles.main}>
 
-            )
-        } else {
-            return null;
-        }
+                    <View style={styles.form}>
+                        <ScrollView contentContainerStyle={styles.formContainer}>
+
+                            <View style={styles.formGroup}>
+                                <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Nom</Text>
+                                <InputText
+                                    placeholder="entrer votre nom"
+                                />
+                            </View>
+                            <View style={styles.formGroup}>
+                                <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Prénom</Text>
+                                <InputText
+                                    placeholder="entrer votre prénom"
+                                />
+                            </View>
+                            <View style={styles.formGroup}>
+                                <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Téléphone</Text>
+                                <InputText
+                                    placeholder="entrer votre numéro de téléphone"
+                                    keyboardType="numeric"
+                                />
+                            </View>
+
+                        </ScrollView>
+                    </View>
+
+                    <View style={styles.btnContainer}>
+                        <Pressable
+                            style={styles.btnSecondary}
+                            onPress={() => navigation.navigate("Home", { isServiceProvider: route.params.isServiceProvider })}
+                        >
+
+                            <Text style={[styles.btnText, { color: Colors.primary }]}>Précédent</Text>
+                        </Pressable>
+                        <Pressable
+                            style={styles.btnPrimary}
+                            onPress={() => navigation.navigate("Second", { isServiceProvider: route.params.isServiceProvider })}
+                        >
+                            <Text style={[styles.btnText, { color: Colors.white }]}>OK</Text>
+                        </Pressable>
+                    </View>
+
+                    <SlideIndicator routeName={route.name} routeParam={route.params.isServiceProvider} />
+
+                </View>
+            </View>
+
+        )
+    } else {
+        return null;
     }
+}
 
-};
+
 
 const styles = StyleSheet.create({
     container: {
@@ -171,29 +142,6 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "flex-start",
-    },
-    containerIndicator: {
-        alignSelf: "center",
-        flex: 1,
-        flexDirection: "row",
-        width: 80,
-        justifyContent: "space-between",
-        alignItems: "flex-end",
-    },
-    indicator: {
-        height: 12,
-        width: 12,
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: Colors.secondary,
-        backgroundColor: Colors.bgColor,
-    },
-    indicatorActive: {
-        height: 12,
-        width: 12,
-        borderRadius: 10,
-        borderColor: Colors.secondary,
-        backgroundColor: Colors.secondary
     },
     btnContainer: {
         width: "100%",

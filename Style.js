@@ -5,7 +5,8 @@ exports.Colors  = {
     primary: "#141414",
     secondary: "#989898",
     white: "#F7F7F7",
-    bgColor: "#E7E8EA"
+    bgColor: "#E7E8EA",
+    alert: "#fb8500",
 }
 
 exports.Typography = StyleSheet.create({
@@ -24,11 +25,11 @@ exports.Typography = StyleSheet.create({
         fontSize: 14,
         color: "#141414",
         letterSpacing: 0.2
+    }, 
+    detail: {
+        fontSize: 14,
+        color: "#989898",
+        letterSpacing: 0.2
     }
 });
 
-
-
-exports.FontFamily = {
-    main: "Montserrat"   
-}
