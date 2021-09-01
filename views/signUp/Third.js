@@ -6,7 +6,6 @@ import SlideIndicator from "../../components/SlideIndicator";
 import InputText from "../../components/InputText";
 
 import Request from "../../components/Request";
-import axios from "axios";
 
 export default function Third({ navigation, route }) {
 
@@ -35,7 +34,7 @@ export default function Third({ navigation, route }) {
 
     const signUp = async () => {
         const data = { ...route.params.first, ...route.params.second, ...route.params.third };
-        await axios.post("https://wefia.herokuapp.com/api/user", data)
+        await Request.post("api/user/signUp", data)
             .then((response) =>{
                 console.log(response);
             })

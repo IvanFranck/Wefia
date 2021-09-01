@@ -1,37 +1,44 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { View, StatusBar, StyleSheet, Text, Dimensions, TextInput, Alert, Pressable, KeyboardAvoidingView, Platform } from "react-native";
 import * as Font from "expo-font";
 import { Colors, Typography } from "../Style"
 
-
+import Request from "../components/Request";
 import InputText from "../components/InputText";
-export default class LogIn extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            fontLoaded: false,
-            login: "",
-            password: ""
-        }
+export default function LogIn ({route, navigation}){
+
+    const [fontLoaded, loadFonts] = useState(false);
+    const [mailAddress, setMailAddress] = useState("");
+    const [password, setPassword] = useState("");
+
+    
+
+    useEffect(()=>{
+        (async ()=> {
+            await Font.loadAsync({
+                Montserrat_Bold: require("../assets/fonts/MontserratBold.ttf"),
+                Montserrat_Regular: require("../assets/fonts/MontserratRegular.ttf")
+            });
+            loadFonts(true);
+        })();
+    }, [fontLoaded])
+
+    const logIn = () =>{
+        Request.post("/api/user/logIn", {
+            mailAddress,
+            password
+        }).then( response => {console.log("response : ", response)})
+          .catch( error => {
+              console.error("error :", error);
+              throw error;
+          })
     }
-
-    async loadFonts() {
-        await Font.loadAsync({
-            Montserrat_Bold: require("../assets/fonts/MontserratBold.ttf"),
-            Montserrat_Regular: require("../assets/fonts/MontserratRegular.ttf")
-        });
-        this.setState({ fontLoaded: true });
-    }
-
-    componentDidMount() {
-        this.loadFonts();
-    }
+    
 
 
-    render() {
 
-        if (this.state.fontLoaded) {
+        if (fontLoaded) {
 
             return (
                 <View style={styles.container}>
@@ -50,19 +57,27 @@ export default class LogIn extends React.Component {
                         <Text style={styles.mainSubText}>Remplissez le formulaire ci-dessous pour continuer.</Text>
 
                         <View style={styles.form}>
+
+                            {/* mail address */}
                             <InputText
                                 placeholder="Adresse mail"
                                 keyboardType="email-address"
+                                onChangeText={text => setMailAddress(text)}
+                                defaultValue={mailAddress}
                             />
+
+                            {/* password */}
                             <TextInput
                                 style={styles.input}
                                 placeholder="mot de passe"
                                 selectionColor={Colors.primary}
                                 secureTextEntry={true}
+                                onChangeText={text => setPassword(text)}
+                                defaultValue={password}
                             />
                             <Pressable
                                 style={styles.btnLogin}
-                                onPress={() => Alert.alert("se connecter")}
+                                onPress={logIn}
                             >
                                 <Text style={[styles.btnText, { color: Colors.white }]}>Se Connecter</Text>
                             </Pressable>
@@ -75,7 +90,7 @@ export default class LogIn extends React.Component {
                                 <Text style={styles.bottomText}>Vous n'avez pas de compte ?</Text>
                                 <Pressable
 
-                                    onPress={() => this.props.navigation.navigate('SignUp')}
+                                    onPress={() => navigation.navigate('SignUp')}
                                 >
                                     <Text style={styles.link}>Inscrivez-vous.</Text>
                                 </Pressable>
@@ -90,7 +105,6 @@ export default class LogIn extends React.Component {
         }
     }
 
-};
 
 const styles = StyleSheet.create({
     container: {
