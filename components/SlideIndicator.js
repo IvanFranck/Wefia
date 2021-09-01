@@ -2,10 +2,10 @@ import React from 'react';
 import { Colors } from "../Style";
 import { StyleSheet, View, Pressable } from "react-native";
 
-export default function SlideIndicator({ routeName, routeParam }) {
+export default function SlideIndicator({ routeName, routeParam, navigation }) {
 
 
-    isSlideActive = (routeName, ActiveRoute) => {
+    const isSlideActive = (routeName, ActiveRoute) => {
         if (ActiveRoute == routeName) {
             return styles.indicatorActive
         }
@@ -17,18 +17,18 @@ export default function SlideIndicator({ routeName, routeParam }) {
         return (
             <View style={styles.containerIndicator}>
                 <Pressable
-                    style={this.isSlideActive(routeName, "First")}
-                    onPress={() => this.props.navigation.navigate("First", { isServiceProvider: routeParam })}
+                    style={isSlideActive(routeName, "First")}
+                    onPress={() => navigation.navigate("First", { isServiceProvider: routeParam })}
                 >
                 </Pressable>
                 <Pressable
-                    style={this.isSlideActive(routeName, "Second")}
-                    onPress={() => this.props.navigation.navigate("Second", { isServiceProvider: routeParam })}
+                    style={isSlideActive(routeName, "Second")}
+                    onPress={() => navigation.navigate("Second", { isServiceProvider: routeParam })}
                 >
                 </Pressable>
                 <Pressable
-                    style={this.isSlideActive(routeName, "Third")}
-                    onPress={() => this.props.navigation.navigate("Third", { isServiceProvider: routeParam })}
+                    style={isSlideActive(routeName, "Third")}
+                    onPress={() => navigation.navigate("Third", { isServiceProvider: routeParam })}
                 >
                 </Pressable>
             </View>
@@ -37,23 +37,23 @@ export default function SlideIndicator({ routeName, routeParam }) {
         return (
             <View style={styles.containerIndicator}>
                 <Pressable
-                    style={this.isSlideActive(routeName, "First")}
-                    onPress={() => this.props.navigation.navigate("First", { isServiceProvider: routeParam })}
+                    style={isSlideActive(routeName, "First")}
+                    onPress={() => navigation.navigate("First", { isServiceProvider: routeParam })}
                 >
                 </Pressable>
                 <Pressable
-                    style={this.isSlideActive(routeName, "Second")}
-                    onPress={() => this.props.navigation.navigate("Second", { isServiceProvider: routeParam })}
+                    style={isSlideActive(routeName, "Second")}
+                    onPress={() => navigation.navigate("Second", { isServiceProvider: routeParam })}
                 >
                 </Pressable>
                 <Pressable
-                    style={this.isSlideActive(routeName, "Third_SP")}
-                    onPress={() => this.props.navigation.navigate("Third_SP", { isServiceProvider: routeParam })}
+                    style={isSlideActive(routeName, "Third_SP")}
+                    onPress={() => navigation.navigate("Third_SP", { isServiceProvider: routeParam })}
                 >
                 </Pressable>
                 <Pressable
-                    style={this.isSlideActive(routeName, "CNIPictureUpload")}
-                    onPress={() => this.props.navigation.navigate("CNIPictureUpload", { isServiceProvider: routeParam })}
+                    style={isSlideActive(routeName, "CNIPictureUpload")}
+                    onPress={() => navigation.navigate("CNIPictureUpload", { isServiceProvider: routeParam })}
                 >
                 </Pressable>
             </View>
@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
     containerIndicator: {
         alignSelf: "center",
         flex: 1,
+        flexGrow: 0.2,
         flexDirection: "row",
         width: 80,
         justifyContent: "space-between",

@@ -1,5 +1,4 @@
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Home from "./signUp/Home";
@@ -26,26 +25,95 @@ export default function SignUp() {
                 <Stack.Screen
                     name="First"
                     component={First}
+                    initialParams={{
+                        first : {
+                            "firstName": "",
+                            "secondName": "",
+                            "phoneNumber": ""
+                        }
+                    }}
                 />
 
                 <Stack.Screen
                     name="Second"
                     component={Second}
+                    initialParams= {{
+                        first : {
+                            "firstName": "",
+                            "lastName": "",
+                            "phoneNumber": 0
+                        },
+                        second: {
+                            "location": "",
+                            "birthdayDate": "",
+                            "birthdayPlace": ""
+                        }
+                    }}
                 />
                 <Stack.Screen
                     name="Third"
                     component={Third}
+                    initialParams= {{
+                        first : {
+                            "firstName": "",
+                            "lastName": "",
+                            "phoneNumber": ""
+                        },
+                        second: {
+                            "location": "",
+                            "birthdayDate": "",
+                            "birthdayPlace": ""
+                        }, 
+                        third: {
+                            "mailAddress": "",
+                            "password": "",
+                        }
+                    }}
                 />
-                {/*
-                    Service provider third sing up ui
-                */}
                 <Stack.Screen 
                     name = "Third_SP"
                     component = {Third_SP}
+                    initialParams= {{
+                        first : {
+                            "firstName": "",
+                            "lastName": "",
+                            "phoneNumber": 0
+                        },
+                        second: {
+                            "location": "",
+                            "birthdayDate": "",
+                            "birthdayPlace": ""
+                        },
+                        third: {
+                            "RCCId": "",
+                            "mailAddress": "",
+                            "password": "",
+                            "useConditions": false
+                        }
+                    }}
                 />
                 <Stack.Screen
                     name = "CNIPictureUpload"
                     component={CNIPictureUpload}
+                    initialParams= {{
+                        first : {
+                            "firstName": "",
+                            "lastName": "",
+                            "phoneNumber": 0
+                        },
+                        second: {
+                            "location": "",
+                            "birthdayDate": "",
+                            "birthdayPlace": ""
+                        },
+                        third: {
+                            "RCCId": "",
+                            "mailAddress": "",
+                            "password": "",
+                            "useConditions": false
+                        },
+                        CNIPictureUpload: []
+                    }}
                 />
                 <Stack.Screen
                     name="ProfilePicture"

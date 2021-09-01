@@ -3,7 +3,7 @@ import { View, ScrollView, StatusBar, StyleSheet, Text, Dimensions, Alert, Press
 import * as Font from "expo-font";
 import { Colors, Typography } from "../../Style";
 import InputText from "../../components/InputText";
-import DatePicker from "react-native-datepicker";
+import DatePicker from "@react-native-community/datetimepicker";
 import SlideIndicator from "../../components/SlideIndicator";
 
 export default function First({ navigation, route }) {
@@ -11,8 +11,16 @@ export default function First({ navigation, route }) {
     // handle the font loading state
     const [fontLoaded, loadFont] = useState(false);
 
-    // handle the datepicker value
-    const [date, setDate] = useState("");
+    //handle datePicker
+    const [show, setShow] = useState(false);
+
+    // handle input data
+    const [location, setlocation] = useState("Douala - Akwa");
+    const [birthdayDate, setbirthdayDate] = useState(new Date("2000-01-01"));
+    const [birthdayPlace, setbirthdayPlace] = useState("Douala");
+
+    const [formatDate, setformatDate] = useState("");
+
 
     useEffect(() => {
         (async () => {
@@ -22,15 +30,39 @@ export default function First({ navigation, route }) {
             });
             loadFont(true);
         })();
-        console.log("is sp ", route.params.isServiceProvider);
     }, [])
+
+    //handle onchange dateTimePicker
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate || birthdayDate;
+        setbirthdayDate(currentDate);
+        setShow(false);
+        
+        let template = new Date(currentDate);
+        let newFormatDate = template.getFullYear() + " / " + (template.getMonth()+1) + " / " + template.getDate();
+        setformatDate(newFormatDate);
+    }
 
     //handle navigation to the third sign up ui: if it is serice provider sign up process navigate to the SP third ui 
     const handleNavigationToThird = () => {
         if (route.params.isServiceProvider) {
-            navigation.navigate("Third_SP", { isServiceProvider: route.params.isServiceProvider });
-        }else{
-            navigation.navigate("Third", { isServiceProvider: route.params.isServiceProvider });
+            navigation.navigate("Third_SP", { 
+                ...route.params,
+                second: {
+                    "location": location,
+                    "birthdayDate": formatDate,
+                    "birthdayPlace": birthdayPlace
+                }
+            });
+        } else {
+            navigation.navigate("Third", { 
+                ...route.params,
+                second: {
+                    "location": location,
+                    "birthdayDate": formatDate,
+                    "birthdayPlace": birthdayPlace
+                }
+            });
         }
     }
 
@@ -54,44 +86,62 @@ export default function First({ navigation, route }) {
                     <View style={styles.form}>
                         <ScrollView contentContainerStyle={styles.formContainer}>
 
+                            {/* date */}
+
                             <View style={styles.formGroup}>
+
                                 <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Date de naissance</Text>
-                                <DatePicker
-                                    style={{ width: "100%" }}
-                                    date={date}
-                                    mode="date"
-                                    placeholder="entrer votre date de naissance"
-                                    format="YYYY-MM-DD"
-                                    minDate="2016-05-01"
-                                    maxDate="2016-06-01"
-                                    confirmBtnText="Confirm"
-                                    cancelBtnText="Cancel"
-                                    customStyles={{
-                                        dateIcon: {
-                                            height: 0,
-                                            width: 0
-                                        },
-                                        dateInput: {
-                                            height: 40,
-                                            borderWidth: 1,
-                                            padding: 10,
-                                            borderRadius: 10,
-                                        }
+                                <Pressable
+                                    onPress = {()=>setShow(true)}
+                                    style={{
+                                        height: 40,
+                                        width: "100%",
+                                        borderWidth: 1,
+                                        padding: 10,
+                                        borderRadius: 10,
                                     }}
-                                />
+                                >
+                                    <Text style={[Typography.default, { fontFamily: "Montserrat_Regular" }]}>{formatDate}</Text>
+                                </Pressable>
+                                {show && (<DatePicker
+                                    value={birthdayDate} 
+                                    mode="date"
+                                    display="default"
+                                    format="YYYY-MM-DD"
+                                    minimumDate={new Date("1960-12-31")}
+                                    maximumDate={new Date("2003-12-31")}
+                                    is24Hour={true}
+                                    onChange={onChange}
+                                    style={{
+
+                                    }}
+                                />)}
                             </View>
+
+
+                            {/* place of birth */}
+
                             <View style={styles.formGroup}>
                                 <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Lieu de naissance</Text>
                                 <InputText
                                     placeholder="ex: Douala"
+                                    onChangeText={text => setbirthdayPlace(text)}
+                                    defaultValue={birthdayPlace}
                                 />
                             </View>
+
+
+                            {/* localisation */}
+
                             <View style={styles.formGroup}>
-                                <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Téléphone</Text>
+                                <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Localisation</Text>
                                 <InputText
-                                    placeholder="ex: Nkolmesseng Safari"
+                                    placeholder="ex: Yaoundé - Nkolmesseng"
+                                    onChangeText={text => setlocation(text)}
+                                    defaultValue={location}
                                 />
                             </View>
+
                         </ScrollView>
                     </View>
 
@@ -105,13 +155,13 @@ export default function First({ navigation, route }) {
                         </Pressable>
                         <Pressable
                             style={styles.btnPrimary}
-                            onPress={() => handleNavigationToThird()}
+                            onPress={handleNavigationToThird}
                         >
                             <Text style={[styles.btnText, { color: Colors.white }]}>OK</Text>
                         </Pressable>
                     </View>
 
-                    <SlideIndicator routeName={route.name} routeParam={route.params.isServiceProvider} />
+                    <SlideIndicator navigation={navigation} routeName={route.name} routeParam={route.params.isServiceProvider} />
 
                 </View>
             </View>

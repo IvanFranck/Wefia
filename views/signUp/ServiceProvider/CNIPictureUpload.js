@@ -3,15 +3,18 @@ import { View, StatusBar, StyleSheet, Text, Dimensions, Pressable, Alert } from 
 import * as Font from "expo-font";
 import * as ImagePicker from 'expo-image-picker';
 import { Colors, Typography } from "../../../Style";
-import ShowProfileImage from "../../../components/ShowProfileImage"
+import Camera from "../../../components/SVG/Camera";
+import SlideIndicator from "../../../components/SlideIndicator";
+import IsCNIPicturesUploaded from "../../../components/IsCNIPicturesUploaded";
+import Gallery from "../../../components/SVG/Gallery";
 
-export default function CNIPictureUpload() {
+export default function CNIPictureUpload({ navigation, route }) {
 
     // handle font loading state
     const [fontLoaded, loadFont] = useState(false);
 
     // handle profile uploaded image uri
-    const [image, setImage] = useState(null);
+    const [images, setImage] = useState([]);
 
     useEffect(() => {
         (async () => {
@@ -20,27 +23,49 @@ export default function CNIPictureUpload() {
                 Montserrat_Regular: require("../../../assets/fonts/MontserratRegular.ttf")
             });
             await loadFont(true);
-            if (Platform.OS !== 'web') {
-                const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-                if (status !== 'granted') {
-                    alert('Sorry, we need camera roll permissions to make this work!');
-                }
-            }
-        })();
-    }, []);
+            console.log(images)
 
-    const pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
+        })();
+    }, [images]);
+
+    const pickImageFromGallery = async () => {
+
+        // take permission to access to user gallery
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+            alert("Désolé, mais Wefia a besoin d'acceder à votre gallery pour continuer!");
+        }
+
+
+        const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
-            aspect: [4, 4],
+            aspect: [5, 4],
             quality: 1,
         });
 
-        console.log("reslut:", result);
 
         if (!result.cancelled) {
-            setImage(result.uri)
+            await setImage([...images, result.uri]);
+        }
+    }
+
+    const pickImageFromCamera = async () => {
+
+        // take permission to access to user camera
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+        if (status !== 'granted') {
+            alert("Désolé, mais Wefia a besoin d'acceder à votre camera pour continuer!");
+        }
+
+        const result = await ImagePicker.launchCameraAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [5, 4],
+        });
+
+        if (!result.cancelled) {
+            await setImage([...images, result.uri]);
         }
     }
 
@@ -60,54 +85,88 @@ export default function CNIPictureUpload() {
 
                 <View style={styles.main}>
 
+                    {/* subtitle */}
+
                     <View style={styles.subTitle}>
-                        <Text
-                            style=
-                            {
-                                [
-                                    Typography.subTitle,
-                                    { width: "100%", fontFamily: "Montserrat_Bold", textAlign: "center" }
-                                ]
-                            }
-                        >
-                            Ajoutez une photo de profil
-                        </Text>
-                        <Text
-                            style={{
-                                fontFamily: "Montserrat_Regular",
-                                color: Colors.secondary,
-                                letterSpacing: 0.2,
-                                marginTop: 4,
-                                textAlign: "center"
-                            }}
-
-                        >
-                            Aidez les autres à vous reconnaitre. Mettez une photo récente.
-                        </Text>
+                        <Text style={[Typography.subTitle, { fontFamily: "Montserrat_Bold" }]}>Inscription</Text>
                     </View>
 
-                    <View style={styles.profilePictureIcon}>
-                        <ShowProfileImage imageUri={image} action={pickImage}/>
+                    {/* end */}
+
+
+                    {/* import file section */}
+
+                    <View style={styles.ImportFileSection}>
+
+                        <View style={styles.wrapper}>
+
+                            <IsCNIPicturesUploaded imageUploaded={images.length} />
+
+                            <Text
+                                style={[Typography.subTitle, { fontFamily: "Montserrat_Bold", marginTop: 8, marginBottom: 8 }]}
+                            >
+                                Photos de votre CNI
+                            </Text>
+                            <Text
+                                style={[Typography.detail, { fontFamily: "Montserrat_Regular", textAlign: "center" }]}
+                            >
+                                Ajouter des photos récentes et visibles de votre CNI - recto et verso
+                            </Text>
+
+                            {/* camera btn */}
+                            <Pressable
+                                style={styles.btn}
+                                onPress={pickImageFromCamera}
+                            >
+                                <Camera width={15} height={15} color={Colors.primary} />
+                                <Text
+                                    style={[Typography.detail, { fontFamily: "Montserrat_Regular", color: Colors.primary, marginLeft: 4 }]}
+                                >
+
+                                    Prendre une photo
+                                </Text>
+                            </Pressable>
+
+                            {/* gallery btn */}
+                            <Pressable
+                                style={styles.btn}
+                                onPress={pickImageFromGallery}
+                            >
+                                <Gallery width={15} height={15} color={Colors.primary} />
+                                <Text
+                                    style={[Typography.detail, { fontFamily: "Montserrat_Regular", color: Colors.primary, marginLeft: 4 }]}
+                                >
+                                    Gallerie
+                                </Text>
+                            </Pressable>
+                        </View>
+
                     </View>
 
+                    {/* end */}
+
+
+                    {/* next and previous btn section */}
                     <View style={styles.btnContainer}>
                         <Pressable
-                            style={styles.btnPrimary}
-                            onPress={() => Alert.alert("image ajoutée")}
+                            style={styles.btnSecondary}
+                            onPress={() => navigation.navigate("Third_SP", { isServiceProvider: route.params.isServiceProvider })}
                         >
-                            <Text style={[styles.btnText, { color: Colors.white }]}>Définir comme photo de profil</Text>
+
+                            <Text style={[styles.btnText, { color: Colors.primary }]}>Précédent</Text>
                         </Pressable>
                         <Pressable
-                            style={styles.btnSecondary}
-                            onPress={() => Alert.alert("passer")}
+                            style={styles.btnPrimary}
+                            onPress={() => navigation.navigate("ProfilePicture")}
                         >
-
-                            <Text style={[styles.btnText, { color: Colors.primary }]}>Passer cette étape</Text>
+                            <Text style={[styles.btnText, { color: Colors.white }]}>S'inscrire</Text>
                         </Pressable>
+
                     </View>
+                    {/* end */}
 
 
-
+                    <SlideIndicator navigation={navigation} routeName={route.name} routeParam={route.params.isServiceProvider} />
                 </View>
             </View>
 
@@ -152,31 +211,54 @@ const styles = StyleSheet.create({
         flexGrow: 0.1,
         fontFamily: "Montserrat_Bold",
     },
-    profilePictureIcon: {
-        marginTop: 16,
+    ImportFileSection: {
+        flex: 1,
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        flexGrow: 1.2,
+        borderWidth: 2,
+        width: "100%",
+        borderStyle: "dashed",
+        borderRadius: 5,
+        borderColor: Colors.blue,
+        backgroundColor: Colors.white
+    },
+    wrapper: {
+        marginVertical: 12,
         flex: 1,
         flexGrow: 0.9,
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        width: "100%",
+        width: "70%",
+    },
+    btn: {
+        marginTop: 8,
+        flex: 1,
+        flexDirection: "row",
+        borderColor: Colors.primary,
+        borderWidth: 1,
+        borderRadius: 5,
+        flexGrow: 0.3,
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%"
     },
     btnContainer: {
         width: "100%",
         flexGrow: 0.2,
         flex: 1,
-        flexDirection: 'column',
-        justifyContent: "flex-end",
+        flexDirection: "row",
+        justifyContent: "space-between",
         alignItems: "center",
-        paddingTop: 24,
+        paddingTop: 12,
     },
     btnPrimary: {
-        width: "100%",
         alignItems: 'center',
         justifyContent: 'center',
-        paddingVertical: 15,
+        paddingVertical: 10,
         paddingHorizontal: 15,
-        marginBottom: 8,
         borderRadius: 10,
         backgroundColor: Colors.primary,
     },
@@ -190,5 +272,5 @@ const styles = StyleSheet.create({
         fontSize: 16,
         lineHeight: 17,
         letterSpacing: 0.25,
-    },
+    }
 })

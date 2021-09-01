@@ -5,10 +5,16 @@ import { Colors, Typography } from "../../Style";
 import InputText from "../../components/InputText";
 import SlideIndicator from "../../components/SlideIndicator";
 
-export default function First({route, navigation}) {
+export default function First({ route, navigation }) {
 
     // handle the font loading state
     const [fontLoaded, loadFont] = useState(false);
+
+    // handle input data
+    const [firstName, setFirstName] = useState('john');
+    const [lastName, setlastName] = useState("doe");
+    const [phoneNumber, setPhoneNumber] = useState("");
+
 
     useEffect(() => {
         (async () => {
@@ -16,11 +22,20 @@ export default function First({route, navigation}) {
                 Montserrat_Bold: require("../../assets/fonts/MontserratBold.ttf"),
                 Montserrat_Regular: require("../../assets/fonts/MontserratRegular.ttf")
             });
-            loadFont(true);
+            await loadFont(true);
+            if (route.params.first){
+                setPhoneNumber(route.params.first.phoneNumber)
+                setFirstName(route.params.first.FissetFirstName)
+                setlastName(route.params.first.lassetlastName)
+            }
         })();
-        console.log("is sp ", route.params.isServiceProvider);
 
-    }, [])
+    }, [loadFont]);
+
+    const formatPhoneNumber = () => {
+        const number = phoneNumber.split(" ").join("")
+        return parseInt(number)
+    }
 
     if (fontLoaded) {
 
@@ -42,23 +57,31 @@ export default function First({route, navigation}) {
                     <View style={styles.form}>
                         <ScrollView contentContainerStyle={styles.formContainer}>
 
+                            {/* first name */}
                             <View style={styles.formGroup}>
                                 <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Nom</Text>
                                 <InputText
-                                    placeholder="entrer votre nom"
+                                    onChangeText = {text => setFirstName(text)}
+                                    defaultValue={firstName}
                                 />
                             </View>
+
+                            {/* second name */}
                             <View style={styles.formGroup}>
                                 <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Prénom</Text>
                                 <InputText
-                                    placeholder="entrer votre prénom"
+                                    onChangeText = {text => setlastName(text)}
+                                    defaultValue={lastName}
                                 />
                             </View>
+
+                            {/* phone number */}
                             <View style={styles.formGroup}>
                                 <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Téléphone</Text>
                                 <InputText
-                                    placeholder="entrer votre numéro de téléphone"
                                     keyboardType="numeric"
+                                    onChangeText = {text => setPhoneNumber(text)}
+                                    defaultValue={phoneNumber}
                                 />
                             </View>
 
@@ -75,13 +98,20 @@ export default function First({route, navigation}) {
                         </Pressable>
                         <Pressable
                             style={styles.btnPrimary}
-                            onPress={() => navigation.navigate("Second", { isServiceProvider: route.params.isServiceProvider })}
+                            onPress={() => navigation.navigate("Second", { 
+                                isServiceProvider: route.params.isServiceProvider,
+                                first : {
+                                    "firstName": firstName,
+                                    "lastName": lastName,
+                                    "phoneNumber": formatPhoneNumber()
+                                }
+                            })}
                         >
                             <Text style={[styles.btnText, { color: Colors.white }]}>OK</Text>
                         </Pressable>
                     </View>
 
-                    <SlideIndicator routeName={route.name} routeParam={route.params.isServiceProvider} />
+                    <SlideIndicator navigation={navigation} routeName={route.name} routeParam={route.params.isServiceProvider} />
 
                 </View>
             </View>

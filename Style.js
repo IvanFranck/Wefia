@@ -7,6 +7,7 @@ exports.Colors  = {
     white: "#F7F7F7",
     bgColor: "#E7E8EA",
     alert: "#fb8500",
+    blue: "#99B4EA",
 }
 
 exports.Typography = StyleSheet.create({

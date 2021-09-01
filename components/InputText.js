@@ -1,16 +1,18 @@
 import { TextInput, StyleSheet } from "react-native";
-import { Colors } from "../Style";
+import { Colors, Typography } from "../Style";
 import React from "react";
 
-export default function InputText({placeholder, keyboardType, secureTextEntry}) {
+export default function InputText({placeholder, keyboardType, secureTextEntry, onChangeText, defaultValue}) {
 
     return (
         <TextInput
-            style={style.input}
+            style={[style.input, Typography.default, {fontFamily: "Montserrat_Regular" }]}
             selectionColor={Colors.primary}
             placeholder = {placeholder}
             keyboardType = {keyboardType}
             secureTextEntry={secureTextEntry}
+            onChangeText={onChangeText}
+            defaultValue={defaultValue}
         />
     )
 }

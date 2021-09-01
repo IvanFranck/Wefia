@@ -23,6 +23,7 @@ export default function Third_SP({ navigation, route }) {
                 Montserrat_Regular: require("../../../assets/fonts/MontserratRegular.ttf")
             });
             loadFont(true);
+            console.log("is service provider ", route.params.isServiceProvider);
         })();
     }, [])
 
@@ -47,6 +48,8 @@ export default function Third_SP({ navigation, route }) {
                     <View style={styles.form}>
                         <ScrollView contentContainerStyle={styles.formContainer}>
 
+                            {/* RCCId */}
+
                             <View style={styles.formGroup}>
                                 <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Numéro de contribuable </Text>
                                 <View style={styles.info}>
@@ -55,6 +58,10 @@ export default function Third_SP({ navigation, route }) {
                                 </View>
                                 <InputText />
                             </View>
+
+
+                            {/* @mail */}
+
                             <View style={styles.formGroup}>
                                 <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Adresse mail</Text>
                                 <InputText
@@ -62,6 +69,10 @@ export default function Third_SP({ navigation, route }) {
                                     keyboardType="email-address"
                                 />
                             </View>
+
+
+                            {/* password */}
+
                             <View style={styles.formGroup}>
                                 <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Mot de passe</Text>
                                 <InputText
@@ -69,6 +80,10 @@ export default function Third_SP({ navigation, route }) {
                                     secureTextEntry={true}
                                 />
                             </View>
+
+
+                            {/* use conditions */}
+
                             <View style={styles.useConditionContainer}>
                                 <CheckBox
                                     value={isCheck}
@@ -97,6 +112,8 @@ export default function Third_SP({ navigation, route }) {
                                     </Text>
                                 </Pressable>
                             </View>
+
+                            
                         </ScrollView>
                     </View>
 
@@ -110,14 +127,14 @@ export default function Third_SP({ navigation, route }) {
                         </Pressable>
                         <Pressable
                             style={styles.btnPrimary}
-                            onPress={() => navigation.navigate("CNIPictureUpload")}
+                            onPress={() => navigation.navigate("CNIPictureUpload", { isServiceProvider: route.params.isServiceProvider })}
                         >
                             <Text style={[styles.btnText, { color: Colors.white }]}>OK </Text>
                         </Pressable>
 
                     </View>
 
-                    <SlideIndicator routeName={route.name} routeParam={route.params.isServiceProvider} />
+                    <SlideIndicator navigation={navigation} routeName={route.name} routeParam={route.params.isServiceProvider} />
 
                 </View>
             </View>
