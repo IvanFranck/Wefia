@@ -53,13 +53,18 @@ export default function Third_SP({ navigation, route }) {
 
         return (
             <Pressable
-                onPress={pickService(item.wording)}
-                style={styles.serviceContainer}
+                onPress={() => pickService(item.wording)}
+                style={[
+                    styles.serviceContainer,
+                    {
+                        backgroundColor: item.wording == seclectedService ? Colors.primary : Colors.bgColor
+                    }
+                ]}
             >
                 <Text
                     style={{
                         fontFamily: "Montserrat_Regular",
-                        color: Colors.primary,
+                        color: item.wording == seclectedService ? Colors.white : Colors.primary,
                         letterSpacing: 0.2,
                         textAlign: "center",
                         paddingVertical: 4,
