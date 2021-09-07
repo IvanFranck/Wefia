@@ -55,14 +55,22 @@ export default function Third_SP({ navigation, route }) {
                 style={[
                     styles.serviceContainer,
                     {
+<<<<<<< HEAD
                         backgroundColor: seclectedService == item.wording ? Colors.primary : Colors.bgColor
+=======
+                        backgroundColor: item.wording == seclectedService ? Colors.primary : Colors.bgColor
+>>>>>>> hotfix
                     }
                 ]}
             >
                 <Text
                     style={{
                         fontFamily: "Montserrat_Regular",
+<<<<<<< HEAD
                         color: seclectedService == item.wording ?  Colors.white : Colors.primary,
+=======
+                        color: item.wording == seclectedService ? Colors.white : Colors.primary,
+>>>>>>> hotfix
                         letterSpacing: 0.2,
                         textAlign: "center",
                         paddingVertical: 4,
