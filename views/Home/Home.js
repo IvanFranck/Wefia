@@ -5,12 +5,16 @@ import * as Font from "expo-font";
 import Notification from '../../components/Notification';
 import SearchBar from '../../components/SearchBar';
 import ServiceProviderCard from '../../components/ServiceProviderCard';
+import Request from "../../components/Request";
+import { render } from 'react-dom';
 
 
 export default function Home() {
 
     //handle fonts loading
-    const [fontLoaded, laodFonts] = useState(false)
+    const [fontLoaded, laodFonts] = useState(false);
+
+    const [servicesProviders, setSP] = useState([])
 
     useEffect(() => {
         (async () => {
@@ -19,8 +23,18 @@ export default function Home() {
                 Montserrat_Regular: require("../../assets/fonts/MontserratRegular.ttf")
             });
             laodFonts(true);
+
+            await Request.get("/serviceProvider")
+                .then(resp => {
+                    setSP(resp.data);
+                })
+                .catch(err => console.error(err))
         })()
-    })
+    }, [])
+
+    const renderServiceProvCards = ({ item }) => {
+        return <ServiceProviderCard data={item} />
+    }
 
 
     if (!fontLoaded) {
@@ -57,9 +71,13 @@ export default function Home() {
 
                 {/* service provider profils */}
 
-                <Text style={[Typography.default, { fontFamily: "Montserrat_Regular", marginBottom: 8 }]}>Les plus populaires</Text>
+                <Text style={[Typography.default, { fontFamily: "Montserrat_Bold", marginBottom: 32, fontSize: 18}]}>Les plus populaires</Text>
 
-                <ServiceProviderCard />
+                <FlatList
+                    data={servicesProviders}
+                    keyExtractor={item => item._id}
+                    renderItem={renderServiceProvCards}
+                />
 
 
 
@@ -77,7 +95,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.bgColor,
         paddingTop: StatusBar.currentHeight,
         paddingHorizontal: 20,
-        paddingTop: 46
+        paddingTop: 70
     },
     header: {
         width: "100%",
@@ -86,7 +104,8 @@ const styles = StyleSheet.create({
         flexGrow: 0.1,
         justifyContent: "space-between",
         alignItems: "center",
-        marginBottom: 20,
+        marginBottom: 24,
+        marginTop: 4,
     },
     headerLeft: {
         flex: 1,

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { View, StatusBar, StyleSheet, Text, Dimensions, TextInput, Alert, Pressable, KeyboardAvoidingView, Platform } from "react-native";
+import { View, StatusBar, StyleSheet, Text, Dimensions, TextInput, CheckBox, Pressable, KeyboardAvoidingView } from "react-native";
 import * as Font from "expo-font";
 import { Colors, Typography } from "../Style"
 
@@ -8,7 +8,13 @@ import InputText from "../components/InputText";
 
 export default function LogIn ({route, navigation}){
 
+    //handle the validity of the form data
+    const [validated, setValidated] = useState(false)
+
     const [fontLoaded, loadFonts] = useState(false);
+
+    // handle input data
+    const [checked, check] = useState(false);
     const [mailAddress, setMailAddress] = useState("");
     const [password, setPassword] = useState("");
 
@@ -75,6 +81,25 @@ export default function LogIn ({route, navigation}){
                                 onChangeText={text => setPassword(text)}
                                 defaultValue={password}
                             />
+
+                            {/* remember me */}
+
+                            <View style={styles.rememberMeConatainer}>
+                                <CheckBox
+                                    value={checked}
+                                    style={styles.checkbox}
+                                    onValueChange={() => check(!checked)}
+                                    tintColors={{ true: Colors.primary, false: Colors.secondary }}
+                                />
+                                <Text style={{
+                                    fontFamily: "Montserrat_Regular",
+                                    color: Colors.secondary,
+                                    letterSpacing: 0.2
+                                }}>Se souvenir de moi</Text>
+                                
+                            </View>
+
+                            {/* log in btn */}
                             <Pressable
                                 style={styles.btnLogin}
                                 onPress={logIn}
@@ -146,7 +171,7 @@ const styles = StyleSheet.create({
     form: {
         width: "100%",
         flex: 1,
-        flexGrow: 0.5,
+        flexGrow: 0.7,
         flexDirection: "column",
         paddingTop: 28,
         justifyContent: "space-between",
@@ -160,6 +185,18 @@ const styles = StyleSheet.create({
         borderRadius: 10,
 
     },
+    rememberMeConatainer: {
+        flex: 1,
+        flexGrow: 0.4,
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        flexWrap: "wrap",
+    },
+    checkbox: {
+        height: 30,
+        width: 30
+    },
     btnLogin: {
         backgroundColor: Colors.primary,
         width: "100%",
@@ -168,7 +205,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         flex: 1,
         flexDirection: "column",
-        flexGrow: 0.15,
+        flexGrow: 0.1,
         justifyContent: "center"
     },
     btnText: {

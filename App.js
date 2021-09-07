@@ -18,16 +18,16 @@ export default function App() {
           headerShown: false
         }}
       >
-        <Stack.Screen 
+        {/* <Stack.Screen 
           name = "Welcomme" 
           component = {Welcome}
           
-        />
-        {/* <Stack.Screen 
+        /> */}
+        <Stack.Screen 
           name = "Home" 
           component = {Home}
           
-        /> */}
+        />
         <Stack.Screen 
           name = "LogIn" component = {LogIn}
         />

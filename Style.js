@@ -8,6 +8,7 @@ exports.Colors  = {
     bgColor: "#E7E8EA",
     alert: "#fb8500",
     blue: "#99B4EA",
+    card: "#D7D8DA"
 }
 
 exports.Typography = StyleSheet.create({
