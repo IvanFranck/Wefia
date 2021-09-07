@@ -6,8 +6,6 @@ import SlideIndicator from "../../../components/SlideIndicator";
 import InputText from "../../../components/InputText";
 import InformationSVG from "../../../components/SVG/InformationSVG";
 import Request from "../../../components/Request";
-import Service from "../../../components/Service";
-import { Picker } from "@react-native-picker/picker"
 
 export default function Third_SP({ navigation, route }) {
 
@@ -53,13 +51,18 @@ export default function Third_SP({ navigation, route }) {
 
         return (
             <Pressable
-                onPress={pickService(item.wording)}
-                style={styles.serviceContainer}
+                onPress={() => pickService(item.wording)}
+                style={[
+                    styles.serviceContainer,
+                    {
+                        backgroundColor: seclectedService == item.wording ? Colors.primary : Colors.bgColor
+                    }
+                ]}
             >
                 <Text
                     style={{
                         fontFamily: "Montserrat_Regular",
-                        color: Colors.primary,
+                        color: seclectedService == item.wording ?  Colors.white : Colors.primary,
                         letterSpacing: 0.2,
                         textAlign: "center",
                         paddingVertical: 4,
