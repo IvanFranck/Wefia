@@ -23,10 +23,9 @@ export default function CNIPictureUpload({ navigation, route }) {
                 Montserrat_Regular: require("../../../assets/fonts/MontserratRegular.ttf")
             });
             await loadFont(true);
-            console.log(images)
 
         })();
-    }, [images]);
+    }, [fontLoaded]);
 
     const pickImageFromGallery = async () => {
 

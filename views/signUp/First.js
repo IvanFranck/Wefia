@@ -63,6 +63,7 @@ export default function First({ route, navigation }) {
                                 <InputText
                                     onChangeText = {text => setFirstName(text)}
                                     defaultValue={firstName}
+                                    placeholder="entrer votre nom"
                                 />
                             </View>
 
@@ -72,6 +73,7 @@ export default function First({ route, navigation }) {
                                 <InputText
                                     onChangeText = {text => setlastName(text)}
                                     defaultValue={lastName}
+                                    placeholder="entrer votre prénom"
                                 />
                             </View>
 
@@ -82,6 +84,7 @@ export default function First({ route, navigation }) {
                                     keyboardType="numeric"
                                     onChangeText = {text => setPhoneNumber(text)}
                                     defaultValue={phoneNumber}
+                                    placeholder="entrer votre numéro de téléphone"
                                 />
                             </View>
 

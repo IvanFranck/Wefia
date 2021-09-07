@@ -34,7 +34,7 @@ export default function Third({ navigation, route }) {
 
     const signUp = async () => {
         const data = { ...route.params.first, ...route.params.second, ...route.params.third };
-        await Request.post("api/user/signUp", data)
+        await Request.post("/user/signUp", data)
             .then((response) =>{
                 console.log(response);
             })

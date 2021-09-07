@@ -2,6 +2,7 @@ import React from "react";
 import LogIn from './views/LogIn';
 import Welcome from "./views/Welcome";
 import SignUp from "./views/SignUp";
+import Home from "./views/Home/Home";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -18,10 +19,15 @@ export default function App() {
         }}
       >
         <Stack.Screen 
-          name = "Welcome" 
+          name = "Welcomme" 
           component = {Welcome}
           
         />
+        {/* <Stack.Screen 
+          name = "Home" 
+          component = {Home}
+          
+        /> */}
         <Stack.Screen 
           name = "LogIn" component = {LogIn}
         />

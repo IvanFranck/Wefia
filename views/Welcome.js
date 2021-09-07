@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Dimensions, View, Text, StatusBar, Pressable, Alert } from "react-native";
+import { StyleSheet, Dimensions, View, Text, StatusBar, Pressable } from "react-native";
 import { Colors, Typography } from "../Style";
 import * as Font from "expo-font";
 

@@ -15,9 +15,9 @@ export default function First({ navigation, route }) {
     const [show, setShow] = useState(false);
 
     // handle input data
-    const [location, setlocation] = useState("Douala - Akwa");
+    const [location, setlocation] = useState("");
     const [birthdayDate, setbirthdayDate] = useState(new Date("2000-01-01"));
-    const [birthdayPlace, setbirthdayPlace] = useState("Douala");
+    const [birthdayPlace, setbirthdayPlace] = useState("");
 
     const [formatDate, setformatDate] = useState("");
 
@@ -136,7 +136,7 @@ export default function First({ navigation, route }) {
                             <View style={styles.formGroup}>
                                 <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Localisation</Text>
                                 <InputText
-                                    placeholder="ex: Yaoundé - Nkolmesseng"
+                                    placeholder="ex: Yaoundé - Essos"
                                     onChangeText={text => setlocation(text)}
                                     defaultValue={location}
                                 />

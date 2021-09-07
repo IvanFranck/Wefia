@@ -1,35 +1,83 @@
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, StatusBar, StyleSheet, CheckBox, Text, Dimensions, Alert, Pressable } from "react-native";
+import { View, ScrollView, StatusBar, StyleSheet, CheckBox, Text, TextInput, Dimensions, Alert, FlatList, Pressable } from "react-native";
 import * as Font from "expo-font";
 import { Colors, Typography } from "../../../Style";
 import SlideIndicator from "../../../components/SlideIndicator";
 import InputText from "../../../components/InputText";
 import InformationSVG from "../../../components/SVG/InformationSVG";
+import Request from "../../../components/Request";
+import Service from "../../../components/Service";
+import { Picker } from "@react-native-picker/picker"
 
 export default function Third_SP({ navigation, route }) {
 
-
-
-    // handle the font loading state
     const [fontLoaded, loadFont] = useState(false);
 
-    // handle the uses conditions choice
     const [isCheck, check] = useState(false);
+
+    const [services, setServices] = useState([]);
+
+    const [seclectedService, selectService] = useState("");
+
 
     useEffect(() => {
         (async () => {
+
             await Font.loadAsync({
                 Montserrat_Bold: require("../../../assets/fonts/MontserratBold.ttf"),
                 Montserrat_Regular: require("../../../assets/fonts/MontserratRegular.ttf")
             });
-            loadFont(true);
-            console.log("is service provider ", route.params.isServiceProvider);
+            loadFont( true );
+            console.log("fonts loaded");
+
+            await Request.get("/service/")
+                .then(resp => {
+
+                    setServices( resp.data );
+                    console.log("response: ", services);
+                })
+                .catch(err => {
+                    console.log(err.message)
+                })
+
+
         })();
-    }, [])
+    }, []);
+
+    const pickService = (service) => {
+        selectService(service)
+    };
+
+
+    const renderService = ({ item }) => {
+
+        return (
+            <Pressable
+                onPress={pickService(item.wording)}
+                style={styles.serviceContainer}
+            >
+                <Text
+                    style={{
+                        fontFamily: "Montserrat_Regular",
+                        color: Colors.primary,
+                        letterSpacing: 0.2,
+                        textAlign: "center",
+                        paddingVertical: 4,
+                        paddingHorizontal: 10,
+                        textAlignVertical: "center"
+
+                    }}
+                >{item.wording}</Text>
+            </Pressable>
+        )
+    }
 
 
 
-    if (fontLoaded) {
+
+
+
+    if (fontLoaded && services) {
 
         return (
             <View style={styles.container}>
@@ -50,13 +98,30 @@ export default function Third_SP({ navigation, route }) {
 
                             {/* RCCId */}
 
-                            <View style={styles.formGroup}>
-                                <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Numéro de contribuable </Text>
+                            <View style={[styles.formGroup, { flexGrow: 1.2 }]}>
+                                <Text style={[Typography.default, { fontFamily: "Montserrat_Regular" }]}>Numéro de contribuable </Text>
                                 <View style={styles.info}>
                                     <InformationSVG width="16" height="16" color={Colors.secondary} />
                                     <Text style={{ color: Colors.secondary, marginLeft: 4 }}>Ce champ est facultatif </Text>
                                 </View>
-                                <InputText />
+                                <TextInput
+                                    style={[styles.input, Typography.default, { fontFamily: "Montserrat_Regular" }]}
+                                    selectionColor={Colors.primary}
+                                />
+                            </View>
+
+                            {/* Services */}
+
+                            <View style={[styles.formGroup, { flexGrow: 0.8, marginVertical: 8 }]}>
+                                <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Service</Text>
+
+                                <FlatList
+                                    data={services}
+                                    renderItem={renderService}
+                                    horizontal={true}
+                                    keyExtractor={item => item._id}
+                                />
+
                             </View>
 
 
@@ -113,7 +178,7 @@ export default function Third_SP({ navigation, route }) {
                                 </Pressable>
                             </View>
 
-                            
+
                         </ScrollView>
                     </View>
 
@@ -142,6 +207,10 @@ export default function Third_SP({ navigation, route }) {
     } else {
         return null;
     }
+
+
+
+
 }
 
 const styles = StyleSheet.create({
@@ -192,13 +261,28 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "flex-start",
+        flexGrow: 1.2
+    },
+    input: {
+        height: 35,
+        width: "100%",
+        borderWidth: 1,
+        padding: 10,
+        borderRadius: 10,
     },
     info: {
         flex: 1,
         flexDirection: "row",
         width: "100%",
         justifyContent: "flex-start",
-        flexGrow: 0.7
+        flexGrow: 0.9,
+        marginTop: 4
+    },
+    serviceContainer: {
+        borderWidth: 1,
+        borderColor: Colors.primary,
+        marginRight: 8,
+        borderRadius: 100
     },
     useConditionContainer: {
         flex: 1,
