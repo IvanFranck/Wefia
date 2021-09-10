@@ -1,13 +1,13 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import Home from "./signUp/Home";
-import First from "./signUp/First";
-import Second from "./signUp/Second";
-import Third from "./signUp/Third";
-import ProfilePicture from "./signUp/ProfilePicture";
-import Third_SP from "./signUp/ServiceProvider/Third";
-import CNIPictureUpload from "./signUp/ServiceProvider/CNIPictureUpload";
+import Home from "../views/signUp/Home";
+import First from "../views/signUp/First";
+import Second from "../views/signUp/Second";
+import Third from "../views/signUp/Third";
+import ProfilePicture from "../views/signUp/ProfilePicture";
+import Third_SP from "../views/signUp/ServiceProvider/Third";
+import CNIPictureUpload from "../views/signUp/ServiceProvider/CNIPictureUpload";
 
 const Stack = createNativeStackNavigator();
 
