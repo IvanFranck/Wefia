@@ -5,7 +5,7 @@ import { Colors, Typography } from "../Style";
 import DeviceStorage from "../services/DeviceStorage";
 import Container from "../components/container";
 
-import Request from "../components/Request";
+import {Request} from "../components/Request";
 import InputText from "../components/InputText";
 
 export default function LogIn({ route, navigation }) {

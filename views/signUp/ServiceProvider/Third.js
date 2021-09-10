@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, StatusBar, StyleSheet, CheckBox, Text, TextInput, Dimensions, Alert, FlatList, Pressable } from "react-native";
+import { View, ScrollView, StatusBar, StyleSheet, CheckBox, Text, TextInput, Dimensions, Alert, FlatList, Pressable, ActivityIndicator } from "react-native";
 import * as Font from "expo-font";
 import { Colors, Typography } from "../../../Style";
 import SlideIndicator from "../../../components/SlideIndicator";
 import InputText from "../../../components/InputText";
 import InformationSVG from "../../../components/SVG/InformationSVG";
-import Request from "../../../components/Request";
+import {Request} from "../../../components/Request";
 
 export default function Third_SP({ navigation, route }) {
 
@@ -233,7 +233,11 @@ export default function Third_SP({ navigation, route }) {
             </View>
         )
     } else {
-        return null;
+        return (
+            <View style={{justifyContent: "center", alignItems: "center", flex: 1}}>
+                <ActivityIndicator color={Colors.primary} size="large" />
+            </View>
+        )
     }
 
 

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Dimensions, View, Text, Image, StatusBar, Pressable, Alert, ScrollView, FlatList } from "react-native";
+import { StyleSheet, Dimensions, View, Text, Image, StatusBar, Pressable, Alert, ScrollView, FlatList, ActivityIndicator } from "react-native";
 import { Colors, Typography } from "../../Style";
 import * as Font from "expo-font";
 import Notification from '../../components/Notification';
 import SearchBar from '../../components/SearchBar';
 import ServiceProviderCard from '../../components/ServiceProviderCard';
-import Request from "../../components/Request";
+import {Request} from "../../components/Request";
 
 
 export default function Home() {
@@ -29,15 +29,17 @@ export default function Home() {
                 })
                 .catch(err => console.error(err))
         })()
-    }, [])
+    }, [servicesProviders, fontLoaded])
 
-    const renderServiceProvCards = ({ item }) => {
-        return <ServiceProviderCard data={item} />
-    }
+    
 
 
-    if (!fontLoaded) {
-        return null;
+    if (!fontLoaded && servicesProviders) {
+        return (
+            <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+                <ActivityIndicator color={Colors.primary} size = "large" />
+            </View>
+        );
     } else {
         return (
             <ScrollView

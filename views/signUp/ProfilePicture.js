@@ -7,13 +7,16 @@ import ShowProfileImage from "../../components/ShowProfileImage"
 import Camera from "../../components/SVG/Camera";
 import Gallery from "../../components/SVG/Gallery";
 
-export default function ProfilePicture() {
+import DeviceStorage from "../../services/DeviceStorage";
+
+
+export default function ProfilePicture({navigation, route}) {
 
     // handle font loading state
     const [fontLoaded, loadFont] = useState(false);
 
     // handle profile uploaded image uri
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState({});
 
     useEffect(() => {
         (async () => {
@@ -23,7 +26,7 @@ export default function ProfilePicture() {
             });
             await loadFont(true);
 
-        })();
+        })() 
     }, []);
 
     const pickImageFromGallery = async () => {
@@ -43,7 +46,7 @@ export default function ProfilePicture() {
         });
 
         if (!result.cancelled) {
-            setImage(result.uri)
+            setImage(result)
         }
     }
 
@@ -62,7 +65,19 @@ export default function ProfilePicture() {
         });
 
         if (!result.cancelled) {
-            setImage(result.uri)
+            setImage(result)
+        }
+    }
+
+ 
+
+
+    const AddProfilePricture = async () => {
+        if (image) {
+            DeviceStorage.saveItem("picture_image_uri", image.uri);
+            // add profil img in user data base account
+
+            navigation.navigate("tab");
         }
     }
 
@@ -112,7 +127,7 @@ export default function ProfilePicture() {
                     {/* profil image */}
 
                     <View style={styles.profilePicture}>
-                        <ShowProfileImage imageUri={image} />
+                        <ShowProfileImage imageUri={image.uri} />
                     </View>
 
                     {/* end */}
@@ -141,7 +156,7 @@ export default function ProfilePicture() {
                     <View style={styles.btnContainer}>
                         <Pressable
                             style={styles.btnPrimary}
-                            onPress={() => Alert.alert("image ajoutée")}
+                            onPress={AddProfilePricture}
                         >
                             <Text style={[styles.btnText, { color: Colors.white }]}>Définir comme photo de profil</Text>
                         </Pressable>

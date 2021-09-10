@@ -5,7 +5,7 @@ import { Colors, Typography } from "../../Style";
 import SlideIndicator from "../../components/SlideIndicator";
 import InputText from "../../components/InputText";
 
-import Request from "../../components/Request";
+import {Request} from "../../components/Request";
 
 export default function Third({ navigation, route }) {
 
