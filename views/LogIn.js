@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { View, StatusBar, StyleSheet, Text, Dimensions, TextInput, CheckBox, Pressable } from "react-native";
+import { View, StatusBar, StyleSheet, Text, Dimensions, TextInput, CheckBox, Pressable, Alert } from "react-native";
 import * as Font from "expo-font";
 import { Colors, Typography } from "../Style";
 import DeviceStorage from "../services/DeviceStorage";
-import Container from "../components/container";
+
+import AsyncStorageStatic from "@react-native-async-storage/async-storage";
+
 
 import {Request} from "../components/Request";
 import InputText from "../components/InputText";
 
 export default function LogIn({ route, navigation }) {
+
+    const [isLogedIn, pressLogInbBtn] = useState(false);
 
     //handle the validity of the form data
     const [validated, setValidated] = useState(false)
@@ -16,7 +20,6 @@ export default function LogIn({ route, navigation }) {
     const [fontLoaded, loadFonts] = useState(false);
 
     // handle input data
-    const [checked, check] = useState(false);
     const [mailAddress, setMailAddress] = useState("");
     const [password, setPassword] = useState("");
 
@@ -30,19 +33,37 @@ export default function LogIn({ route, navigation }) {
             });
             loadFonts(true);
         })();
-    }, [fontLoaded])
+    }, [fontLoaded]);
+
+    useEffect( ()=>{
+        if (mailAddress && password){
+            setValidated(true);
+        }else{
+            setValidated(false);
+        }
+        
+    }, [mailAddress, password]);
+
+    useEffect( ()=> {
+        pressLogInbBtn(false);
+    }, [])
 
     const logIn = async () => {
-        await Request.post("/user/logIn", {
-            mailAddress,
-            password
-        }).then(response => {
-            DeviceStorage.saveItem("id_token", response.data.token);
-            navigation.navigate("tab", {token: response.data.token, userId: response.data.userId})
-        }).catch(error => {
-            console.error("error :", error);
-            throw error;
-        })
+        if(validated){
+            pressLogInbBtn(true);
+            await Request.post("/user/logIn", {
+                mailAddress,
+                password
+            }).then(response => {
+                DeviceStorage.saveItem("id_token", response.data.token);
+                navigation.navigate("tab", {token: response.data.token, userId: response.data.userId})
+            }).catch(error => {
+                console.error("error :", error);
+                throw error;
+            })
+        }else {
+            Alert.alert("remplir tous les champs SVP")
+        }
     }
 
 
@@ -83,29 +104,17 @@ export default function LogIn({ route, navigation }) {
                         defaultValue={password}
                     />
 
-                    {/* remember me */}
-
-                    <View style={styles.rememberMeConatainer}>
-                        <CheckBox
-                            value={checked}
-                            style={styles.checkbox}
-                            onValueChange={() => check(!checked)}
-                            tintColors={{ true: Colors.primary, false: Colors.secondary }}
-                        />
-                        <Text style={{
-                            fontFamily: "Montserrat_Regular",
-                            color: Colors.secondary,
-                            letterSpacing: 0.2
-                        }}>Se souvenir de moi</Text>
-
-                    </View>
 
                     {/* log in btn */}
                     <Pressable
-                        style={styles.btnLogin}
+                        style={isLogedIn ? styles.btnPrimaryDisable : styles.btnLogin}
                         onPress={logIn}
                     >
-                        <Text style={[styles.btnText, { color: Colors.white }]}>Se Connecter</Text>
+                        { isLogedIn 
+                            ? <Text disabled={true} style={[styles.btnText, { color: Colors.white }]}>Connexion ...</Text> 
+                            : <Text style={[styles.btnText, { color: Colors.white }]}>Se Connecter</Text>
+                        }
+                        
                     </Pressable>
                 </View>
 
@@ -172,7 +181,7 @@ const styles = StyleSheet.create({
     form: {
         width: "100%",
         flex: 1,
-        flexGrow: 0.7,
+        flexGrow: 0.4,
         flexDirection: "column",
         paddingTop: 28,
         justifyContent: "space-between",
@@ -188,7 +197,7 @@ const styles = StyleSheet.create({
     },
     rememberMeConatainer: {
         flex: 1,
-        flexGrow: 0.4,
+        flexGrow: 0.2,
         flexDirection: "row",
         justifyContent: "flex-start",
         alignItems: "center",
@@ -204,9 +213,9 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         borderRadius: 10,
         alignItems: "center",
-        flex: 1,
+        paddingVertical: 12,
+        paddingHorizontal: 15,
         flexDirection: "column",
-        flexGrow: 0.1,
         justifyContent: "center"
     },
     btnText: {
@@ -214,6 +223,15 @@ const styles = StyleSheet.create({
         lineHeight: 17,
         letterSpacing: 0.25,
         fontFamily: "Montserrat_Regular"
+    },
+    btnPrimaryDisable: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 12,
+        width: "100%",
+        paddingHorizontal: 15,
+        borderRadius: 10,
+        backgroundColor: Colors.secondary,
     },
     bottom: {
         paddingTop: 18,

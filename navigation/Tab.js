@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Search from '../views/Search/Search';
-import Home from '../views/Home/Home';
+import HomeStackNavigator from "./HomeStackNavigator";
 import Profil from '../views/Profil/Profil';
 import Demand from '../views/Demand/Demand';
 import * as Font from "expo-font";
@@ -48,8 +48,8 @@ const Tabs = () => {
 
                 {/* Home */}
                 <Tab.Screen
-                    name="Home"
-                    component={Home}
+                    name="HomeStackNavigator"
+                    component={HomeStackNavigator}
                     options={{
                         tabBarIcon: ({ focused }) => (
                             <View style={style.tabBarIcon}>

@@ -6,41 +6,37 @@ import Notification from '../../components/Notification';
 import SearchBar from '../../components/SearchBar';
 import ServiceProviderCard from '../../components/ServiceProviderCard';
 import {Request} from "../../components/Request";
+import DeviceStorage from '../../services/DeviceStorage';
 
 
-export default function Home() {
+export default function Home({navigation}) {
 
-    //handle fonts loading
-    const [fontLoaded, laodFonts] = useState(false);
+ 
 
     const [servicesProviders, setSP] = useState([])
 
     useEffect(() => {
         (async () => {
-            await Font.loadAsync({
-                Montserrat_Bold: require("../../assets/fonts/MontserratBold.ttf"),
-                Montserrat_Regular: require("../../assets/fonts/MontserratRegular.ttf")
-            });
-            laodFonts(true);
-
+           
             await Request.get("/serviceProvider")
                 .then(resp => {
                     setSP(resp.data);
                 })
                 .catch(err => console.error(err))
         })()
-    }, [servicesProviders, fontLoaded])
+    }, [servicesProviders])
 
     
 
 
-    if (!fontLoaded && servicesProviders) {
+    if (!servicesProviders) {
         return (
             <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
                 <ActivityIndicator color={Colors.primary} size = "large" />
             </View>
         );
     } else {
+
         return (
             <ScrollView
                 style={styles.view}
@@ -81,12 +77,7 @@ export default function Home() {
 
                     {servicesProviders.map((serviceProvider, index) => {
                         return (
-                            <ServiceProviderCard data={serviceProvider} key={index} />
-                        )
-                    })}
-                    {servicesProviders.map((serviceProvider, index) => {
-                        return (
-                            <ServiceProviderCard data={serviceProvider} key={index} />
+                            <ServiceProviderCard navigation={navigation} data={serviceProvider} key={index} />
                         )
                     })}
 

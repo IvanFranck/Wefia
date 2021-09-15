@@ -1,4 +1,6 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
+import * as Font from "expo-font";
+
 
 import { AuthContext } from "./components/Context"
 
@@ -12,8 +14,19 @@ import RootNavigator from "./navigation/RootNavigator";
 
 export default function App() {
 
-  const [isLoading, load] = useState(false);
 
+  //handle fonts loading
+  const [fontLoaded, loadFonts] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+        await Font.loadAsync({
+            Montserrat_Bold: require("./assets/fonts/MontserratBold.ttf"),
+            Montserrat_Regular: require("./assets/fonts/MontserratRegular.ttf")
+        });
+        loadFonts(true);
+    })()
+}, [fontLoaded])
 
   // 
   const authContext = useMemo(() => ({
@@ -27,7 +40,7 @@ export default function App() {
     },
   }));
 
-  if (isLoading) {
+  if (!fontLoaded) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
         <ActivityIndicator color={Colors.primary} size="large" />

@@ -4,7 +4,7 @@ import { Colors, Typography } from "../Style";
 import Location from "./SVG/Location";
 import Star from "./SVG/Star";
 
-export default function ServiceProviderCard({ data }) {
+export default function ServiceProviderCard({ data, navigation }) {
 
 
     const getAge = () => {
@@ -19,7 +19,7 @@ export default function ServiceProviderCard({ data }) {
     }
 
     return (
-        <Pressable style={styles.card}>
+        <Pressable onPress={()=>navigation.navigate("ContactSP", {info: data})} style={styles.card}>
 
             {/* header */}
             <View style={styles.header}>
@@ -41,7 +41,9 @@ export default function ServiceProviderCard({ data }) {
                             <Location
                                 width={15}
                                 height={18}
-                                color={Colors.secondary}
+                                stroke={Colors.secondary}
+                                color= {Colors.secondary}
+                                secondFillColor={Colors.white}
                             />
                             <Text
                                 style={[
