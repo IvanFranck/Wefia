@@ -9,7 +9,7 @@ import {Request} from "../../components/Request";
 import DeviceStorage from '../../services/DeviceStorage';
 
 
-export default function Home({navigation}) {
+export default function Home({navigation, route}) {
 
  
 
@@ -23,8 +23,9 @@ export default function Home({navigation}) {
                     setSP(resp.data);
                 })
                 .catch(err => console.error(err))
-        })()
-    }, [servicesProviders])
+        })();
+
+    }, [])
 
     
 
@@ -77,7 +78,7 @@ export default function Home({navigation}) {
 
                     {servicesProviders.map((serviceProvider, index) => {
                         return (
-                            <ServiceProviderCard navigation={navigation} data={serviceProvider} key={index} />
+                            <ServiceProviderCard navigation={navigation} data={{serviceProvider: serviceProvider, userId: route.params.userId}} key={index} />
                         )
                     })}
 

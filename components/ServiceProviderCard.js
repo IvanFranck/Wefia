@@ -4,12 +4,12 @@ import { Colors, Typography } from "../Style";
 import Location from "./SVG/Location";
 import Star from "./SVG/Star";
 
-export default function ServiceProviderCard({ data, navigation }) {
+export default function ServiceProviderCard({  navigation, data  }) {
 
 
     const getAge = () => {
         let age = 0;
-        const userBirthYear = new Date(data.birthdayDate).getFullYear();
+        const userBirthYear = new Date(data.serviceProvider.birthdayDate).getFullYear();
         const currentYear = new Date().getFullYear();
 
         age = currentYear - userBirthYear;
@@ -19,7 +19,7 @@ export default function ServiceProviderCard({ data, navigation }) {
     }
 
     return (
-        <Pressable onPress={()=>navigation.navigate("ContactSP", {info: data})} style={styles.card}>
+        <Pressable onPress={()=>navigation.navigate("ContactSP", {info: data.serviceProvider, userId: data.userId})} style={styles.card}>
 
             {/* header */}
             <View style={styles.header}>
@@ -30,13 +30,13 @@ export default function ServiceProviderCard({ data, navigation }) {
                     <Image
                         style={styles.image}
                         source={{
-                            uri: `${data.profilePicture}`,
+                            uri: `${data.serviceProvider.profilePicture}`,
                         }}
                     />
 
                     {/* description */}
                     <View style={styles.description}>
-                        <Text style={[Typography.default, { fontFamily: "Montserrat_Bold" }]}>{data.firstName + " " + data.lastName}</Text>
+                        <Text style={[Typography.default, { fontFamily: "Montserrat_Bold" }]}>{data.serviceProvider.firstName + " " + data.serviceProvider.lastName}</Text>
                         <View style={styles.personnalInfo}>
                             <Location
                                 width={15}
@@ -53,7 +53,7 @@ export default function ServiceProviderCard({ data, navigation }) {
                                         fontFamily: "Montserrat_Regular"
                                     }
                                 ]}
-                            >{data.location}</Text>
+                            >{data.serviceProvider.location}</Text>
                         </View>
                     </View>
 
@@ -95,7 +95,7 @@ export default function ServiceProviderCard({ data, navigation }) {
                             fontSize: 10
                         }
                     ]}
-                >{data.service}</Text>
+                >{data.serviceProvider.service}</Text>
                 <View>
                     <Text
                         style={[

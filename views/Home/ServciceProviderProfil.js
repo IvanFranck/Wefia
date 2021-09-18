@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Text, View, ScrollView, StatusBar, Dimensions, StyleSheet, ImageBackground, Image, Pressable, Animated } from "react-native";
 
 import { Colors, Typography } from "../../Style";
@@ -8,24 +8,20 @@ import Cake from '../../components/SVG/Cake';
 import Comment from '../../components/SVG/Comment';
 import Send from '../../components/SVG/Send';
 
+import { Request } from "../../components/Request";
+
 
 
 const ServciceProviderProfil = ({ route }) => {
 
-    const [scrollY, setScrollY] = useState(new Animated.Value(0));
-    const [offset, setOffset] = useState(0);
-
-    const [scrollViewHeight, setScrollViewHeight] = useState(0);
-
-    const [contentHeight, setContentHeight] = useState(0);
-
     const info = route.params.info;
+    const userId = route.params.userId;
 
     const img = { uri: info.profilePicture }
 
-    const getLoyaltyYears = () => {
+    // const getLoyaltyYears = () => {
 
-    }
+    // }
     const getAge = () => {
         const birthYear = new Date(info.birthdayDate).getFullYear();
         const currentYear = new Date(Date.now()).getFullYear();
@@ -33,45 +29,33 @@ const ServciceProviderProfil = ({ route }) => {
         return currentYear - birthYear;
     }
 
-    const onScrollBtnMove = (event) => {
-        const currentOffset = event.nativeEvent.contentOffset.y;
-        const direction = currentOffset > offset ? "down" : "up";
-        const distance = offset ? (offset - currentOffset) : 0;
-        const newPosition = scrollY._value - distance;
+    const contactSP = async() => {
 
-        // console.log(direction, newPosition);
+        let user = null;
+        await Request.get(`/user/${userId}`)
+                                .then(resp => {
+                                    user= resp.data.user;
+                                })
+                                .catch(err => console.error("error : ", err))
 
-        if (currentOffset > 0 && currentOffset < (contentHeight - scrollViewHeight)) {
-            if (direction === 'down') {
-                scrollY.setValue(newPosition > 62 ? 62 : newPosition)
-            }
-            if (direction === 'up') {
-                scrollY.setValue(newPosition > 0 ? 0 : newPosition)
-            }
-            setOffset(currentOffset);
-        }
+        console.log("command request")
 
-
-
+        await Request.post("/command", {
+            "détails": `Salut ${info.firstName}, Je suis ${user.firstName} ${user.lastName}. Je réside à ${user.location} et j’aurai besoin de vos services en ${info.service}. Merci.`,
+            "userId": user._id,
+            "serviceProviderId": info._id
+        }).then(resp => {
+            console.log("response data: ", resp.data);
+        }).catch( err => console.error( "erreur :", err))
     }
 
+
     return (
+
+        
         <ScrollView
             style={styles.view}
-            onScroll={onScrollBtnMove}
-            scrollEventThrottle={1}
-            onLayout={(ev) => { setScrollViewHeight(ev.nativeEvent.layout.height) }}
-            onContentSizeChange={(w, h) => { setContentHeight(h) }}
         >
-
-            {/* contact button */}
-            <Animated.View style={[styles.btn, { transform: [{ translateY: scrollY }] }]}>
-                <Pressable >
-                    <Send width={24} height={24} color={Colors.white} />
-                    {/* <Text style={[styles.btnText, { color: Colors.white, fontFamily: "Montserrat_Regular" }]}>Contacter</Text> */}
-                </Pressable>
-            </Animated.View>
-
 
             <View styles={styles.container}>
                 <StatusBar
@@ -95,11 +79,23 @@ const ServciceProviderProfil = ({ route }) => {
                     top: 180,
                     height: 190
                 }}></View>
+
+
+                {/* main  */}
                 <View style={styles.main}>
 
+                    {/* header */}
                     <View style={styles.top}>
-                        <Text style={[Typography.title, { fontFamily: "Montserrat_Bold" }]}>{info.firstName + " " + info.lastName}</Text>
-                        <Text style={[Typography.default, { fontFamily: "Montserrat_Regular" }]}>{"" + info.service}</Text>
+                        <View stye={styles.SPname}>
+                            <Text style={[Typography.title, { fontFamily: "Montserrat_Bold" }]}>{info.firstName + " " + info.lastName}</Text>
+                            <Text style={[Typography.default, { fontFamily: "Montserrat_Regular" }]}>{"" + info.service}</Text>
+                        </View>
+
+                        {/* contact button */}
+                        <Pressable style={styles.btnContainer} onPress= {contactSP}>
+                            <Text style={[styles.btnText, { color: Colors.white, fontFamily: "Montserrat_Regular", marginRight: 8 }]}>Contacter</Text>
+                            <Send width={15} height={15} color={Colors.white} />
+                        </Pressable>
                     </View>
 
 
@@ -127,7 +123,7 @@ const ServciceProviderProfil = ({ route }) => {
                                 </View>
                                 <Text style={[Typography.detail, { fontFamily: "Montserrat_Regular" }]}>Présent sur wefia depuis</Text>
                             </View>
-                            <Text style={[{ fontFamily: "Montserrat_Regular", marginLeft: 25 }]}>{info.location}</Text>
+                            <Text style={[{ fontFamily: "Montserrat_Regular", marginLeft: 25 }]}>1 an</Text>
                         </View>
 
                         {/* age */}
@@ -200,18 +196,17 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         flexGrow: 1,
     },
-    btn: {
-        position: "absolute",
-        bottom: 175,
-        right: 15,
+    btnContainer: {
+        marginTop: 6,
+        flex: 1,
+        flexGrow: 0.7,
         backgroundColor: Colors.primary,
-        borderRadius: 100,
+        borderRadius: 5,
         alignItems: "center",
-        paddingVertical: 15,
-        paddingHorizontal: 15,
-        flexDirection: "column",
+        paddingVertical: 8,
+        paddingHorizontal: 5,
+        flexDirection: "row",
         justifyContent: "center",
-        zIndex: 100,
     },
     btnText: {
         fontSize: 12,
@@ -224,7 +219,10 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "space-between",
         flexDirection: "row",
-        alignItems: "center",
+        alignItems: "flex-start",
+
+    },
+    SPname: {
 
     },
     about: {
