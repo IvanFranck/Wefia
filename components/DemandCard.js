@@ -52,7 +52,7 @@ const DemandCard = function ({ demand, navigation }) {
 
     if (SP) {
         return (
-            <Pressable style={[styles.card, {borderLeftColor: getDemandStatusColor()}]}>
+            <Pressable onPress={()=>{navigation.navigate("DemandDetails", {demand: demand, serviceProvider: SP})}} style={[styles.card, {borderLeftColor: getDemandStatusColor()}]}>
                 <View style={styles.left}>
                     <Image style={styles.img} source={{ uri: SP.profilePicture }} />
                     <View style={styles.leftDetails}>

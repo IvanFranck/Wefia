@@ -8,11 +8,12 @@ import DemandCard from '../../components/DemandCard';
 
 import { Colors, Typography } from "../../Style";
 
-const Demand = function ({ navigation }) {
+const Demand = function ({ navigation, route }) {
 
     const [demands, setDemands] = useState(null);
 
     useEffect(() => {
+        
         (async () => {
             await Request.get("/command")
                 .then(resp => {
@@ -20,7 +21,7 @@ const Demand = function ({ navigation }) {
                 })
                 .catch(err => console.error("erreur :", err))
         })();
-    }, [demands])
+    }, [demands]);
 
     if (demands) {
 
@@ -28,7 +29,7 @@ const Demand = function ({ navigation }) {
 
             <Container>
                 <View style={styles.header}>
-                    <Text style={[Typography.subTitle, { fontFamily: "Montserrat_Bold" }]}>Demandes</Text>
+                    <Text style={[Typography.subTitle, { fontFamily: "Montserrat_Bold", textAlign: "center", flexGrow: 1 }]}>Demandes</Text>
                     <Filter width={20} height={20} color={Colors.primary} />
                 </View>
 
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
     demandContainer: {
         marginTop: 32,
         flex: 1,
-        flexDirection: 'column',
+        flexDirection: 'column-reverse',
         width: "100%",
     }
 })

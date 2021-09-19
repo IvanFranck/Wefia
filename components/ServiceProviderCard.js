@@ -19,7 +19,7 @@ export default function ServiceProviderCard({  navigation, data  }) {
     }
 
     return (
-        <Pressable onPress={()=>navigation.navigate("ContactSP", {info: data.serviceProvider, userId: data.userId})} style={styles.card}>
+        <Pressable onPress={()=>navigation.navigate("ContactSP", {info: data.serviceProvider})} style={styles.card}>
 
             {/* header */}
             <View style={styles.header}>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Search from '../views/Search/Search';
 import HomeStackNavigator from "./HomeStackNavigator";
-import Profil from '../views/Profil/Profil';
+import ProfilStackNavigator from '../navigation/ProfilStackNavigator';
 import DemandStackNavigator from '../navigation/DemandStackNavigator';
 import * as Font from "expo-font";
 import { Colors } from '../Style';
@@ -16,7 +16,9 @@ import ProfilSVG from "../components/SVG/Profil";
 
 const Tab = createBottomTabNavigator();
 
-const Tabs = () => {
+const Tabs = ({route}) => {
+
+    // get userId and token from log in view and pass them to children screens
 
     const [fontLoaded, loadFonts] = useState(false);
 
@@ -50,6 +52,10 @@ const Tabs = () => {
                 <Tab.Screen
                     name="HomeStackNavigator"
                     component={HomeStackNavigator}
+                    initialParams={{
+                        token: route.params.token, 
+                        userId: route.params.userId
+                    }}
                     options={{
                         tabBarIcon: ({ focused }) => (
                             <View style={style.tabBarIcon}>
@@ -86,6 +92,10 @@ const Tabs = () => {
                 <Tab.Screen
                     name="DemandStackNavigator"
                     component={DemandStackNavigator}
+                    initialParams={{
+                        token: route.params.token, 
+                        userId: route.params.userId
+                    }}
                     options={{
                         tabBarIcon: ({ focused }) => (
                             <View style={style.tabBarIcon}>
@@ -102,8 +112,12 @@ const Tabs = () => {
 
                 {/* profil */}
                 <Tab.Screen
-                    name="Profil"
-                    component={Profil}
+                    name="ProfilStackNavigator"
+                    component={ProfilStackNavigator}
+                    initialParams={{
+                        token: route.params.token, 
+                        userId: route.params.userId
+                    }}
                     options={{
                         tabBarIcon: ({ focused }) => (
                             <View style={style.tabBarIcon}>

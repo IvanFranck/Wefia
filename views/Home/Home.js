@@ -11,12 +11,18 @@ import DeviceStorage from '../../services/DeviceStorage';
 
 export default function Home({navigation, route}) {
 
- 
+    // get userId and token from HomesatckNavigator
+    
 
     const [servicesProviders, setSP] = useState([])
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
         (async () => {
+
+            await Request.get(`/user/${route.params.userId}`)
+                        .then(resp => setUser(resp.data.user))
+                        .catch(err => console.error(err))
            
             await Request.get("/serviceProvider")
                 .then(resp => {
@@ -30,14 +36,8 @@ export default function Home({navigation, route}) {
     
 
 
-    if (!servicesProviders) {
-        return (
-            <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
-                <ActivityIndicator color={Colors.primary} size = "large" />
-            </View>
-        );
-    } else {
-
+    if (servicesProviders && user) {
+        
         return (
             <ScrollView
                 style={styles.view}
@@ -56,9 +56,9 @@ export default function Home({navigation, route}) {
                     <View style={styles.header}>
                         <View style={styles.headerLeft}>
                             <Pressable style={styles.profilPicture}>
-                                <Image style={styles.userImg} source={require("../../assets/favicon.png")} />
+                                <Image style={styles.userImg} source={{uri: user.profilePicture}} />
                             </Pressable>
-                            <Text>Salut, John</Text>
+                            <Text>{`Salut ${user.firstName}`}</Text>
                         </View>
                         <Notification action={() => Alert.alert("Notifications")} />
                     </View>
@@ -76,9 +76,9 @@ export default function Home({navigation, route}) {
 
                     <Text style={[Typography.default, { fontFamily: "Montserrat_Bold", marginBottom: 32, fontSize: 18 }]}>Les plus populaires</Text>
 
-                    {servicesProviders.map((serviceProvider, index) => {
+                    {servicesProviders.map(serviceProvider => {
                         return (
-                            <ServiceProviderCard navigation={navigation} data={{serviceProvider: serviceProvider, userId: route.params.userId}} key={index} />
+                            <ServiceProviderCard navigation={navigation} data={{serviceProvider: serviceProvider}} key={serviceProvider._id} />
                         )
                     })}
 
@@ -86,6 +86,12 @@ export default function Home({navigation, route}) {
                 </View>
             </ScrollView>
         )
+    } else {
+        return (
+            <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+                <ActivityIndicator color={Colors.primary} size = "large" />
+            </View>
+        );
     }
 
 }
