@@ -24,13 +24,13 @@ const styles = StyleSheet.create({
         width: Dimensions.get("window").width,
         height: Dimensions.get("window").height + 200,
         backgroundColor: Colors.bgColor,
+        marginTop: StatusBar.currentHeight,
+        paddingTop: 15,
+        paddingHorizontal: 20,
+
     },
     container: {
         width: "100%",
         height: "100%",
-        paddingTop: StatusBar.currentHeight,
-        paddingHorizontal: 20,
-        paddingTop: 70
-
     },
 })

@@ -1,5 +1,5 @@
-import React from "react";
-import { Text, View, ScrollView, StatusBar, Dimensions, StyleSheet, ImageBackground, Image, Pressable, Animated } from "react-native";
+import React, { useState } from "react";
+import { Text, View, ScrollView, StatusBar, Dimensions, StyleSheet, ImageBackground, Image, Pressable, Modal } from "react-native";
 
 import { Colors, Typography } from "../../Style";
 import Location from "../../components/SVG/Location";
@@ -7,12 +7,17 @@ import Note from '../../components/SVG/Note';
 import Cake from '../../components/SVG/Cake';
 import Comment from '../../components/SVG/Comment';
 import Send from '../../components/SVG/Send';
+import FlashMessage from "../../components/FlashMessage";
 
 import { Request } from "../../components/Request";
 
 
 
 const ServciceProviderProfil = ({ route }) => {
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const [contacted, setContacted] = useState(false)
+
 
     const info = route.params.info;
     const userId = route.params.userId;
@@ -29,30 +34,31 @@ const ServciceProviderProfil = ({ route }) => {
         return currentYear - birthYear;
     }
 
-    const contactSP = async() => {
+    const contactSP = async () => {
 
         let user = null;
         await Request.get(`/user/${userId}`)
-                                .then(resp => {
-                                    user= resp.data.user;
-                                })
-                                .catch(err => console.error("error : ", err))
+            .then(resp => {
+                user = resp.data.user;
+            })
+            .catch(err => console.error("error : ", err))
 
-        console.log("command request")
 
         await Request.post("/command", {
-            "détails": `Salut ${info.firstName}, Je suis ${user.firstName} ${user.lastName}. Je réside à ${user.location} et j’aurai besoin de vos services en ${info.service}. Merci.`,
+            "details": `Salut ${info.firstName}, Je suis ${user.firstName} ${user.lastName}. Je réside à ${user.location} et j’aurai besoin de vos services en ${info.service}. Merci.`,
             "userId": user._id,
-            "serviceProviderId": info._id
+            "serviceProviderId": info._id,
+            "date": Date.now()
         }).then(resp => {
-            console.log("response data: ", resp.data);
-        }).catch( err => console.error( "erreur :", err))
+            setModalVisible(false)
+            setContacted(true)
+        }).catch(err => console.error("erreur :", err))
     }
 
 
     return (
 
-        
+
         <ScrollView
             style={styles.view}
         >
@@ -65,7 +71,7 @@ const ServciceProviderProfil = ({ route }) => {
                     backgroundColor={Colors.bgColor}
                 />
 
-
+                
 
                 <ImageBackground style={styles.imageBackground} source={img} blurRadius={3}>
                     <Image source={img} style={styles.image} />
@@ -92,7 +98,7 @@ const ServciceProviderProfil = ({ route }) => {
                         </View>
 
                         {/* contact button */}
-                        <Pressable style={styles.btnContainer} onPress= {contactSP}>
+                        <Pressable style={styles.btnContainer} onPress={()=>{setModalVisible(true)}}>
                             <Text style={[styles.btnText, { color: Colors.white, fontFamily: "Montserrat_Regular", marginRight: 8 }]}>Contacter</Text>
                             <Send width={15} height={15} color={Colors.white} />
                         </Pressable>
@@ -158,7 +164,32 @@ const ServciceProviderProfil = ({ route }) => {
                     </View>
                 </View>
 
+                {/* modal: confirm contact SP */}
+                <Modal
+                    animationType="fade"
+                    visible={modalVisible}
+                    transparent={true}
+                    onRequestClose={() => setModalVisible(!modalVisible)}
+                >
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalView}>
+                            <Text style={[Typography.detail, {fontSize: 15, fontFamily: "Montserrat_Regular"}]}>
+                                {`Voulez-vous vraiment contacter ${info.firstName}?`}
+                            </Text>
+                            <View style={styles.modalBtnContainer}>
+                                <Pressable style={[styles.btn, styles.btnConfirm]} onPress={contactSP}>
+                                    <Text style={[Typography.default, {fontFamily: "Montserrat_Regular", color: Colors.white}]}>contacter</Text>
+                                </Pressable>
+                                <Pressable style={[styles.btn]} onPress={()=>setModalVisible(!modalVisible)}>
+                                    <Text style={[Typography.default, {fontFamily: "Montserrat_Regular"}]}>annuler</Text>
+                                </Pressable>
+                            </View>
+                        </View>
 
+                    </View>
+                </Modal>
+
+                {contacted && <FlashMessage message={"demande envoyée"} />}
 
             </View>
         </ScrollView>
@@ -178,6 +209,39 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
 
     },
+    modalContainer: {
+        width: "100%",
+        backgroundColor: Colors.bgColor,
+        opacity: 0.8,
+        flex: 1,
+        flexGrow: 1,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    modalView: {
+        backgroundColor: Colors.bgColor,
+        paddingHorizontal: 15,
+        paddingVertical: 20,
+        borderWidth: 1,
+        borderRadius: 10,
+        borderColor: Colors.primary,
+        height: "15%"
+    },  
+    modalBtnContainer: {
+        flex: 1,
+        flexDirection: "row-reverse",
+        justifyContent: "space-between",
+        alignItems: "flex-end",
+    },
+    btn: {
+        borderColor: Colors.primary,
+        borderRadius: 5,
+        paddingHorizontal: 20,
+        paddingVertical: 4
+    },
+    btnConfirm: {
+        backgroundColor: Colors.primary,
+    },  
     imageBackground: {
         width: "100%",
         height: 200,

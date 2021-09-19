@@ -101,7 +101,8 @@ const styles = StyleSheet.create({
         height: "100%",
         paddingTop: StatusBar.currentHeight,
         paddingHorizontal: 20,
-        paddingTop: 70
+        paddingTop: 70,
+        paddingBottom: 60
     },
     header: {
         width: "100%",

@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Search from '../views/Search/Search';
 import HomeStackNavigator from "./HomeStackNavigator";
 import Profil from '../views/Profil/Profil';
-import Demand from '../views/Demand/Demand';
+import DemandStackNavigator from '../navigation/DemandStackNavigator';
 import * as Font from "expo-font";
 import { Colors } from '../Style';
 import { Text, View, StyleSheet } from "react-native";
@@ -84,8 +84,8 @@ const Tabs = () => {
 
                 {/* demand */}
                 <Tab.Screen
-                    name="Profil"
-                    component={Profil}
+                    name="DemandStackNavigator"
+                    component={DemandStackNavigator}
                     options={{
                         tabBarIcon: ({ focused }) => (
                             <View style={style.tabBarIcon}>
@@ -102,8 +102,8 @@ const Tabs = () => {
 
                 {/* profil */}
                 <Tab.Screen
-                    name="Demand"
-                    component={Demand}
+                    name="Profil"
+                    component={Profil}
                     options={{
                         tabBarIcon: ({ focused }) => (
                             <View style={style.tabBarIcon}>

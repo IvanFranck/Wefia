@@ -61,7 +61,7 @@ export default function ServiceProviderCard({  navigation, data  }) {
 
 
                 {/* marks */}
-                <View style={[styles.marks, styles.right]}>
+                <View style={[styles.marks]}>
                     <Star width={10} height={10} color={Colors.primary} fill={Colors.primary} />
                     <Text
                         style={[

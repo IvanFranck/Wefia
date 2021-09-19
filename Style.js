@@ -9,7 +9,14 @@ exports.Colors  = {
     alert: "#fb8500",
     blue: "#99B4EA",
     card: "#D7D8DA",
-    gray: "#DCDDE0"
+    gray: "#DCDDE0",
+}
+
+exports.demantStatus = {
+    waiting: "#fb8b24",
+    confirmed: "#e36414",
+    rejected: "#9a031e",
+    finished: "#0f4c5c"
 }
 
 exports.Typography = StyleSheet.create({
