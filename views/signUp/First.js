@@ -10,9 +10,12 @@ export default function First({ route, navigation }) {
     // handle the font loading state
     const [fontLoaded, loadFont] = useState(false);
 
+    //handle the validity of the form data
+    const [validated, setValidated] = useState(false)
+
     // handle input data
-    const [firstName, setFirstName] = useState('john');
-    const [lastName, setlastName] = useState("doe");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setlastName] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
 
 
@@ -30,7 +33,17 @@ export default function First({ route, navigation }) {
             }
         })();
 
-    }, [loadFont]);
+    }, [fontLoaded]);
+
+    useEffect( () => {
+        if (firstName && lastName && phoneNumber){
+            setValidated(true);
+        }else{
+            setValidated(false)
+        }
+    }, [firstName, lastName, phoneNumber])
+
+   
 
     const formatPhoneNumber = () => {
         const number = phoneNumber.split(" ").join("")
@@ -100,7 +113,7 @@ export default function First({ route, navigation }) {
                             <Text style={[styles.btnText, { color: Colors.primary }]}>Précédent</Text>
                         </Pressable>
                         <Pressable
-                            style={styles.btnPrimary}
+                            style={!validated ? styles.btnPrimaryDisable : styles.btnPrimary }
                             onPress={() => navigation.navigate("Second", { 
                                 isServiceProvider: route.params.isServiceProvider,
                                 first : {
@@ -109,6 +122,7 @@ export default function First({ route, navigation }) {
                                     "phoneNumber": formatPhoneNumber()
                                 }
                             })}
+                            disabled={!validated}
                         >
                             <Text style={[styles.btnText, { color: Colors.white }]}>OK</Text>
                         </Pressable>
@@ -192,6 +206,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         borderRadius: 10,
         backgroundColor: Colors.primary,
+    },
+    btnPrimaryDisable: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderRadius: 10,
+        backgroundColor: Colors.secondary,
     },
     btnSecondary: {
         alignItems: 'center',

@@ -5,7 +5,7 @@ import { Colors, Typography } from "../../Style";
 import SlideIndicator from "../../components/SlideIndicator";
 import InputText from "../../components/InputText";
 
-import Request from "../../components/Request";
+import {Request} from "../../components/Request";
 
 export default function Third({ navigation, route }) {
 
@@ -14,9 +14,12 @@ export default function Third({ navigation, route }) {
     // handle the font loading state
     const [fontLoaded, loadFont] = useState(false);
 
+    //handle the validity of the form data
+    const [validated, setValidated] = useState(false)
+
     // handle input data
-    const [mailAddress, setmailAddress] = useState("johndoe@gmail.com");
-    const [password, setpassword] = useState("pass123");
+    const [mailAddress, setmailAddress] = useState("");
+    const [password, setpassword] = useState("");
 
     // handle the uses conditions choice
     const [isCheck, check] = useState(false);
@@ -31,6 +34,14 @@ export default function Third({ navigation, route }) {
             console.log("params : ", route.params)
         })();
     }, []);
+
+    useEffect( () => {
+        if (mailAddress && password && isCheck){
+            setValidated(true);
+        }else{
+            setValidated(false)
+        }
+    }, [mailAddress, password, isCheck])
 
     const signUp = async () => {
         const data = { ...route.params.first, ...route.params.second, ...route.params.third };
@@ -137,8 +148,9 @@ export default function Third({ navigation, route }) {
                             <Text style={[styles.btnText, { color: Colors.primary }]}>Précédent</Text>
                         </Pressable>
                         <Pressable
-                            style={styles.btnPrimary}
+                            style={!validated ? styles.btnPrimaryDisable : styles.btnPrimary }
                             onPress={signUp}
+                            disabled={!validated}
                         >
                             <Text style={[styles.btnText, { color: Colors.white }]}>S'inscrire</Text>
                         </Pressable>
@@ -224,6 +236,14 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
         paddingTop: 24
+    },
+    btnPrimaryDisable: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderRadius: 10,
+        backgroundColor: Colors.secondary,
     },
     btnPrimary: {
         alignItems: 'center',

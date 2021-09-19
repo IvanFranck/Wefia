@@ -14,11 +14,13 @@ export default function First({ navigation, route }) {
     //handle datePicker
     const [show, setShow] = useState(false);
 
+    //handle the validity of the form data
+    const [validated, setValidated] = useState(false)
+
     // handle input data
     const [location, setlocation] = useState("");
-    const [birthdayDate, setbirthdayDate] = useState(new Date("2000-01-01"));
+    const [birthdayDate, setbirthdayDate] = useState(new Date("2003-01-01"));
     const [birthdayPlace, setbirthdayPlace] = useState("");
-
     const [formatDate, setformatDate] = useState("");
 
 
@@ -32,21 +34,29 @@ export default function First({ navigation, route }) {
         })();
     }, [])
 
+    useEffect(() => {
+        if (location && birthdayPlace && birthdayDate) {
+            setValidated(true);
+        } else {
+            setValidated(false)
+        }
+    }, [location, birthdayDate, birthdayPlace])
+
     //handle onchange dateTimePicker
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || birthdayDate;
         setbirthdayDate(currentDate);
         setShow(false);
-        
+
         let template = new Date(currentDate);
-        let newFormatDate = template.getFullYear() + " / " + (template.getMonth()+1) + " / " + template.getDate();
+        let newFormatDate = template.getFullYear() + " / " + (template.getMonth() + 1) + " / " + template.getDate();
         setformatDate(newFormatDate);
     }
 
     //handle navigation to the third sign up ui: if it is serice provider sign up process navigate to the SP third ui 
     const handleNavigationToThird = () => {
         if (route.params.isServiceProvider) {
-            navigation.navigate("Third_SP", { 
+            navigation.navigate("Third_SP", {
                 ...route.params,
                 second: {
                     "location": location,
@@ -55,7 +65,7 @@ export default function First({ navigation, route }) {
                 }
             });
         } else {
-            navigation.navigate("Third", { 
+            navigation.navigate("Third", {
                 ...route.params,
                 second: {
                     "location": location,
@@ -92,7 +102,7 @@ export default function First({ navigation, route }) {
 
                                 <Text style={[Typography.default, { marginBottom: 8, fontFamily: "Montserrat_Regular" }]}>Date de naissance</Text>
                                 <Pressable
-                                    onPress = {()=>setShow(true)}
+                                    onPress={() => setShow(true)}
                                     style={{
                                         height: 40,
                                         width: "100%",
@@ -104,7 +114,7 @@ export default function First({ navigation, route }) {
                                     <Text style={[Typography.default, { fontFamily: "Montserrat_Regular" }]}>{formatDate}</Text>
                                 </Pressable>
                                 {show && (<DatePicker
-                                    value={birthdayDate} 
+                                    value={birthdayDate}
                                     mode="date"
                                     display="default"
                                     format="YYYY-MM-DD"
@@ -112,9 +122,7 @@ export default function First({ navigation, route }) {
                                     maximumDate={new Date("2003-12-31")}
                                     is24Hour={true}
                                     onChange={onChange}
-                                    style={{
 
-                                    }}
                                 />)}
                             </View>
 
@@ -154,8 +162,9 @@ export default function First({ navigation, route }) {
                             <Text style={[styles.btnText, { color: Colors.primary }]}>Précédent</Text>
                         </Pressable>
                         <Pressable
-                            style={styles.btnPrimary}
+                            style={!validated ? styles.btnPrimaryDisable : styles.btnPrimary}
                             onPress={handleNavigationToThird}
+                            disabled={!validated}
                         >
                             <Text style={[styles.btnText, { color: Colors.white }]}>OK</Text>
                         </Pressable>
@@ -237,6 +246,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         borderRadius: 10,
         backgroundColor: Colors.primary,
+    }, 
+    btnPrimaryDisable: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderRadius: 10,
+        backgroundColor: Colors.secondary,
     },
     btnSecondary: {
         alignItems: 'center',

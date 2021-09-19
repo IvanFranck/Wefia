@@ -2,8 +2,10 @@ import React from 'react';
 import { StyleSheet, Dimensions, View, Text, StatusBar, Pressable } from "react-native";
 import { Colors, Typography } from "../Style";
 import * as Font from "expo-font";
+import Request from '../components/Request';
 
 import Container from "../components/container"
+import DeviceStorage from '../services/DeviceStorage';
 
 
 
@@ -52,14 +54,14 @@ export default class Welcome extends React.Component {
                             style={styles.btnPrimary}
                             onPress={() => this.props.navigation.navigate("LogIn")}
                         >
-                            <Text style={[styles.btnText, {color: "white"}]}>Se connecter</Text>
+                            <Text style={[styles.btnText, { color: "white" }]}>Se connecter</Text>
                         </Pressable>
                         <Text>Ou</Text>
                         <Pressable
                             style={styles.btnSecondary}
                             onPress={() => this.props.navigation.navigate("SignUp")}
                         >
-                            <Text style={[styles.btnText, {color: Colors.primary}]}>S'inscrire</Text>
+                            <Text style={[styles.btnText, { color: Colors.primary }]}>S'inscrire</Text>
                         </Pressable>
                     </View>
                 </View>

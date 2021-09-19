@@ -33,10 +33,11 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         justifyContent: "space-between",
-        flexGrow: 0.08,
+        flexGrow: 1.3,
         borderWidth: 1,
         borderRadius: 10,
-        marginVertical: 16,
+        marginTop: 40,
+        marginBottom: 32
     },
     searchBtn: {
         borderBottomRightRadius: 8,

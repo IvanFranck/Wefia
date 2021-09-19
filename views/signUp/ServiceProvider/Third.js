@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, StatusBar, StyleSheet, CheckBox, Text, TextInput, Dimensions, Alert, FlatList, Pressable } from "react-native";
+import { View, ScrollView, StatusBar, StyleSheet, CheckBox, Text, TextInput, Dimensions, Alert, FlatList, Pressable, ActivityIndicator } from "react-native";
 import * as Font from "expo-font";
 import { Colors, Typography } from "../../../Style";
 import SlideIndicator from "../../../components/SlideIndicator";
 import InputText from "../../../components/InputText";
 import InformationSVG from "../../../components/SVG/InformationSVG";
-import Request from "../../../components/Request";
+import { Request } from "../../../components/Request";
 
 export default function Third_SP({ navigation, route }) {
 
@@ -15,7 +15,14 @@ export default function Third_SP({ navigation, route }) {
 
     const [services, setServices] = useState([]);
 
-    const [seclectedService, selectService] = useState("");
+    //handle the validity of the form data
+    const [validated, setValidated] = useState(false)
+
+    // handle input data
+    const [selectedService, selectService] = useState("");
+    const [RCCId, setRCCId] = useState("");
+    const [mailAddress, setMailAddress] = useState("");
+    const [password, setPassword] = useState("");
 
 
     useEffect(() => {
@@ -25,22 +32,26 @@ export default function Third_SP({ navigation, route }) {
                 Montserrat_Bold: require("../../../assets/fonts/MontserratBold.ttf"),
                 Montserrat_Regular: require("../../../assets/fonts/MontserratRegular.ttf")
             });
-            loadFont( true );
-            console.log("fonts loaded");
+            loadFont(true);
 
             await Request.get("/service/")
                 .then(resp => {
-
-                    setServices( resp.data );
-                    console.log("response: ", services);
+                    setServices(resp.data);
                 })
                 .catch(err => {
                     console.log(err.message)
                 })
-
-
         })();
     }, []);
+
+    useEffect(() => {
+        if (selectedService && RCCId && mailAddress && password && isCheck) {
+            setValidated(true);
+        } else {
+            setValidated(false)
+        }
+    }, [selectedService, RCCId, mailAddress, password, isCheck])
+
 
     const pickService = (service) => {
         selectService(service)
@@ -55,22 +66,14 @@ export default function Third_SP({ navigation, route }) {
                 style={[
                     styles.serviceContainer,
                     {
-<<<<<<< HEAD
-                        backgroundColor: seclectedService == item.wording ? Colors.primary : Colors.bgColor
-=======
-                        backgroundColor: item.wording == seclectedService ? Colors.primary : Colors.bgColor
->>>>>>> hotfix
+                        backgroundColor: selectedService == item.wording ? Colors.primary : Colors.bgColor
                     }
                 ]}
             >
                 <Text
                     style={{
                         fontFamily: "Montserrat_Regular",
-<<<<<<< HEAD
-                        color: seclectedService == item.wording ?  Colors.white : Colors.primary,
-=======
-                        color: item.wording == seclectedService ? Colors.white : Colors.primary,
->>>>>>> hotfix
+                        color: selectedService == item.wording ? Colors.white : Colors.primary,
                         letterSpacing: 0.2,
                         textAlign: "center",
                         paddingVertical: 4,
@@ -118,6 +121,8 @@ export default function Third_SP({ navigation, route }) {
                                 <TextInput
                                     style={[styles.input, Typography.default, { fontFamily: "Montserrat_Regular" }]}
                                     selectionColor={Colors.primary}
+                                    defaultValue={RCCId}
+                                    onChangeText={text => setRCCId(text)}
                                 />
                             </View>
 
@@ -143,6 +148,8 @@ export default function Third_SP({ navigation, route }) {
                                 <InputText
                                     placeholder="ex: johnDoe@gmail.com"
                                     keyboardType="email-address"
+                                    defaultValue={mailAddress}
+                                    onChangeText={text => setMailAddress(text)}
                                 />
                             </View>
 
@@ -154,6 +161,8 @@ export default function Third_SP({ navigation, route }) {
                                 <InputText
                                     placeholder="entrer votre mot de passe"
                                     secureTextEntry={true}
+                                    defaultValue={password}
+                                    onChangeText={text => setPassword(text)}
                                 />
                             </View>
 
@@ -202,8 +211,16 @@ export default function Third_SP({ navigation, route }) {
                             <Text style={[styles.btnText, { color: Colors.primary }]}>Précédent</Text>
                         </Pressable>
                         <Pressable
-                            style={styles.btnPrimary}
-                            onPress={() => navigation.navigate("CNIPictureUpload", { isServiceProvider: route.params.isServiceProvider })}
+                            style={!validated ? styles.btnPrimaryDisable : styles.btnPrimary}
+                            onPress={() => navigation.navigate("CNIPictureUpload", {
+                                ...route.params,
+                                third: {
+                                    "RCCId": RCCId,
+                                    "mailAddress": mailAddress,
+                                    "password": password,
+                                }
+                            })}
+                            disabled={!validated}
                         >
                             <Text style={[styles.btnText, { color: Colors.white }]}>OK </Text>
                         </Pressable>
@@ -216,7 +233,11 @@ export default function Third_SP({ navigation, route }) {
             </View>
         )
     } else {
-        return null;
+        return (
+            <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
+                <ActivityIndicator color={Colors.primary} size="large" />
+            </View>
+        )
     }
 
 
@@ -322,6 +343,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         borderRadius: 10,
         backgroundColor: Colors.primary,
+    },
+    btnPrimaryDisable: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderRadius: 10,
+        backgroundColor: Colors.secondary,
     },
     btnSecondary: {
         alignItems: 'center',

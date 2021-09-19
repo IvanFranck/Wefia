@@ -13,6 +13,9 @@ export default function CNIPictureUpload({ navigation, route }) {
     // handle font loading state
     const [fontLoaded, loadFont] = useState(false);
 
+    //handle the validity of the form data
+    const [validated, setValidated] = useState(false)
+
     // handle profile uploaded image uri
     const [images, setImage] = useState([]);
 
@@ -26,6 +29,14 @@ export default function CNIPictureUpload({ navigation, route }) {
 
         })();
     }, [fontLoaded]);
+
+    useEffect( () => {
+        if (images.length == 2){
+            setValidated(true);
+        }else{
+            setValidated(false)
+        }
+    }, [images])
 
     const pickImageFromGallery = async () => {
 
@@ -155,8 +166,13 @@ export default function CNIPictureUpload({ navigation, route }) {
                             <Text style={[styles.btnText, { color: Colors.primary }]}>Précédent</Text>
                         </Pressable>
                         <Pressable
-                            style={styles.btnPrimary}
-                            onPress={() => navigation.navigate("ProfilePicture")}
+                            style={!validated ? styles.btnPrimaryDisable : styles.btnPrimary}
+                            onPress={() => navigation.navigate("ProfilePicture",{
+                                    ...route.params,
+                                    CNIPictureUpload: [images[0], images[1]]
+                                })
+                            }
+                            disabled={!validated}
                         >
                             <Text style={[styles.btnText, { color: Colors.white }]}>S'inscrire</Text>
                         </Pressable>
@@ -260,6 +276,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         borderRadius: 10,
         backgroundColor: Colors.primary,
+    },
+    btnPrimaryDisable: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderRadius: 10,
+        backgroundColor: Colors.secondary,
     },
     btnSecondary: {
         alignItems: 'center',

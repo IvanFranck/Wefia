@@ -1,109 +1,150 @@
-import React, {useState, useEffect} from "react";
-import { View, StatusBar, StyleSheet, Text, Dimensions, TextInput, Alert, Pressable, KeyboardAvoidingView, Platform } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, StatusBar, StyleSheet, Text, Dimensions, TextInput, CheckBox, Pressable, Alert } from "react-native";
 import * as Font from "expo-font";
-import { Colors, Typography } from "../Style"
+import { Colors, Typography } from "../Style";
+import DeviceStorage from "../services/DeviceStorage";
 
-import Request from "../components/Request";
+import AsyncStorageStatic from "@react-native-async-storage/async-storage";
+
+
+import {Request} from "../components/Request";
 import InputText from "../components/InputText";
 
-export default function LogIn ({route, navigation}){
+export default function LogIn({ route, navigation }) {
+
+    const [isLogedIn, pressLogInbBtn] = useState(false);
+
+    //handle the validity of the form data
+    const [validated, setValidated] = useState(false)
 
     const [fontLoaded, loadFonts] = useState(false);
+
+    // handle input data
     const [mailAddress, setMailAddress] = useState("");
     const [password, setPassword] = useState("");
 
-    
 
-    useEffect(()=>{
-        (async ()=> {
+
+    useEffect(() => {
+        (async () => {
             await Font.loadAsync({
                 Montserrat_Bold: require("../assets/fonts/MontserratBold.ttf"),
                 Montserrat_Regular: require("../assets/fonts/MontserratRegular.ttf")
             });
             loadFonts(true);
         })();
-    }, [fontLoaded])
+    }, [fontLoaded]);
 
-    const logIn = () =>{
-        Request.post("/api/user/logIn", {
-            mailAddress,
-            password
-        }).then( response => {console.log("response : ", response)})
-          .catch( error => {
-              console.error("error :", error);
-              throw error;
-          })
-    }
-    
+    useEffect( ()=>{
+        if (mailAddress && password){
+            setValidated(true);
+        }else{
+            setValidated(false);
+        }
+        
+    }, [mailAddress, password]);
 
+    useEffect( ()=> {
+        pressLogInbBtn(false);
+    }, [])
 
-
-        if (fontLoaded) {
-
-            return (
-                <View style={styles.container}>
-                    <StatusBar
-                        hidden={false}
-                        translucent={true}
-                        barStyle="dark-content"
-                        backgroundColor={Colors.bgColor}
-                    />
-                    <Text style={[styles.logo, Typography.title]}>Wefia</Text>
-                    <KeyboardAvoidingView
-                        behavior="padding"
-                        style={styles.main}
-                    >
-                        <Text style={styles.mainText}>Bon retour parmi nous. Nous sommes content de vous revoir.</Text>
-                        <Text style={styles.mainSubText}>Remplissez le formulaire ci-dessous pour continuer.</Text>
-
-                        <View style={styles.form}>
-
-                            {/* mail address */}
-                            <InputText
-                                placeholder="Adresse mail"
-                                keyboardType="email-address"
-                                onChangeText={text => setMailAddress(text)}
-                                defaultValue={mailAddress}
-                            />
-
-                            {/* password */}
-                            <TextInput
-                                style={styles.input}
-                                placeholder="mot de passe"
-                                selectionColor={Colors.primary}
-                                secureTextEntry={true}
-                                onChangeText={text => setPassword(text)}
-                                defaultValue={password}
-                            />
-                            <Pressable
-                                style={styles.btnLogin}
-                                onPress={logIn}
-                            >
-                                <Text style={[styles.btnText, { color: Colors.white }]}>Se Connecter</Text>
-                            </Pressable>
-                        </View>
-
-                        <View style={styles.bottom}>
-
-                            <Text style={[styles.bottomText, { textDecorationLine: 'underline', paddingBottom: 8 }]}>Mot de passe oublié ?</Text>
-                            <View style={styles.forgetPassGroup}>
-                                <Text style={styles.bottomText}>Vous n'avez pas de compte ?</Text>
-                                <Pressable
-
-                                    onPress={() => navigation.navigate('SignUp')}
-                                >
-                                    <Text style={styles.link}>Inscrivez-vous.</Text>
-                                </Pressable>
-                            </View>
-                        </View>
-
-                    </KeyboardAvoidingView>
-                </View>
-            )
-        } else {
-            return null;
+    const logIn = async () => {
+        if(validated){
+            pressLogInbBtn(true);
+            await Request.post("/user/logIn", {
+                mailAddress,
+                password
+            }).then(response => {
+                DeviceStorage.saveItem("id_token", response.data.token);
+                navigation.navigate("tab", {
+                    screen: "HomeStackNavigator", 
+                    params: {
+                        screen: 'home', 
+                        params: { token: response.data.token, userId: response.data.userId}
+                    }
+                })
+            }).catch(error => {
+                console.error("error :", error);
+                throw error;
+            })
+        }else {
+            Alert.alert("remplir tous les champs SVP")
         }
     }
+
+
+
+
+    if (fontLoaded) {
+
+        return (
+            <View style={styles.container}>
+                <StatusBar
+                    hidden={false}
+                    translucent={true}
+                    barStyle="dark-content"
+                    backgroundColor={Colors.bgColor}
+                />
+                <Text style={[styles.logo, Typography.title]}>Wefia</Text>
+
+                <Text style={styles.mainText}>Bon retour parmi nous. Nous sommes content de vous revoir.</Text>
+                <Text style={styles.mainSubText}>Remplissez le formulaire ci-dessous pour continuer.</Text>
+
+                <View style={styles.form}>
+
+                    {/* mail address */}
+                    <InputText
+                        placeholder="Adresse mail"
+                        keyboardType="email-address"
+                        onChangeText={text => setMailAddress(text)}
+                        defaultValue={mailAddress}
+                    />
+
+                    {/* password */}
+                    <TextInput
+                        style={styles.input}
+                        placeholder="mot de passe"
+                        selectionColor={Colors.primary}
+                        secureTextEntry={true}
+                        onChangeText={text => setPassword(text)}
+                        defaultValue={password}
+                    />
+
+
+                    {/* log in btn */}
+                    <Pressable
+                        style={isLogedIn ? styles.btnPrimaryDisable : styles.btnLogin}
+                        onPress={logIn}
+                    >
+                        { isLogedIn 
+                            ? <Text disabled={true} style={[styles.btnText, { color: Colors.white }]}>Connexion ...</Text> 
+                            : <Text style={[styles.btnText, { color: Colors.white }]}>Se Connecter</Text>
+                        }
+                        
+                    </Pressable>
+                </View>
+
+                <View style={styles.bottom}>
+
+                    <Text style={[styles.bottomText, { textDecorationLine: 'underline', paddingBottom: 8 }]}>Mot de passe oublié ?</Text>
+                    <View style={styles.forgetPassGroup}>
+                        <Text style={styles.bottomText}>Vous n'avez pas de compte ?</Text>
+                        <Pressable
+
+                            onPress={() => navigation.navigate('SignUp')}
+                        >
+                            <Text style={styles.link}>Inscrivez-vous.</Text>
+                        </Pressable>
+                    </View>
+                </View>
+
+
+            </View>
+        )
+    } else {
+        return null;
+    }
+}
 
 
 const styles = StyleSheet.create({
@@ -146,7 +187,7 @@ const styles = StyleSheet.create({
     form: {
         width: "100%",
         flex: 1,
-        flexGrow: 0.5,
+        flexGrow: 0.4,
         flexDirection: "column",
         paddingTop: 28,
         justifyContent: "space-between",
@@ -160,15 +201,27 @@ const styles = StyleSheet.create({
         borderRadius: 10,
 
     },
+    rememberMeConatainer: {
+        flex: 1,
+        flexGrow: 0.2,
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        flexWrap: "wrap",
+    },
+    checkbox: {
+        height: 30,
+        width: 30
+    },
     btnLogin: {
         backgroundColor: Colors.primary,
         width: "100%",
         paddingVertical: 15,
         borderRadius: 10,
         alignItems: "center",
-        flex: 1,
+        paddingVertical: 12,
+        paddingHorizontal: 15,
         flexDirection: "column",
-        flexGrow: 0.15,
         justifyContent: "center"
     },
     btnText: {
@@ -176,6 +229,15 @@ const styles = StyleSheet.create({
         lineHeight: 17,
         letterSpacing: 0.25,
         fontFamily: "Montserrat_Regular"
+    },
+    btnPrimaryDisable: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 12,
+        width: "100%",
+        paddingHorizontal: 15,
+        borderRadius: 10,
+        backgroundColor: Colors.secondary,
     },
     bottom: {
         paddingTop: 18,
