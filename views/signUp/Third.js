@@ -44,15 +44,16 @@ export default function Third({ navigation, route }) {
     }, [mailAddress, password, isCheck])
 
     const signUp = async () => {
-        const data = { ...route.params.first, ...route.params.second, ...route.params.third };
-        await Request.post("/user/signUp", data)
-            .then((response) =>{
-                console.log(response);
-            })
-            .catch((error) =>{
-                console.log("erreur lors de l'envoie de la requete ",error);
-                throw error;
-            });
+        const data = { ...route.params.first, ...route.params.second, mailAddress, password };
+        console.log("data ", data);
+        // await Request.post("/user/signUp", data)
+        //     .then((response) =>{
+        //         console.log(response);
+        //     })
+        //     .catch((error) =>{
+        //         console.log("erreur lors de l'envoie de la requete ",error);
+        //         throw error;
+        //     });
         
     }   
 

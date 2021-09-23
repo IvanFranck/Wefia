@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Pressable, TextInput, StyleSheet } from "react-native";
 import * as Font from "expo-font";
-import Search from "./SVG/Search";
+import SearchIcon from "./SVG/Search";
 import { Colors } from "../Style";
 
 
@@ -22,7 +22,7 @@ export default function SearchBar() {
                 style={styles.searchInput}
             />
             <Pressable style={styles.searchBtn}>
-                <Search width={20} height={20} color={Colors.white} />
+                <SearchIcon width={20} height={20} color={Colors.white} />
             </Pressable>
         </Pressable>
     );

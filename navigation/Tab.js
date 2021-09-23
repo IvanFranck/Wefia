@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import Search from '../views/Search/Search';
 import HomeStackNavigator from "./HomeStackNavigator";
 import ProfilStackNavigator from '../navigation/ProfilStackNavigator';
@@ -14,9 +14,9 @@ import ProfilSVG from "../components/SVG/Profil";
 
 
 
-const Tab = createBottomTabNavigator();
+const Tab = createMaterialTopTabNavigator();
 
-const Tabs = ({route}) => {
+const Tabs = ({ route }) => {
 
     // get userId and token from log in view and pass them to children screens
 
@@ -35,16 +35,19 @@ const Tabs = ({route}) => {
     if (fontLoaded) {
         return (
             <Tab.Navigator
+                tabBarPosition="bottom"
                 screenOptions={{
                     tabBarShowLabel: false,
                     headerShown: false,
                     tabBarStyle: {
-                        position: "absolute",
+                        width: "100%",
                         bottom: 0,
                         height: 55,
                         backgroundColor: Colors.primary
                     },
-                    tabBarHideOnKeyboard: true
+                    tabBarHideOnKeyboard: true,
+                    tabBarIndicator: ()=>{return null}
+
                 }}
             >
 
@@ -53,18 +56,15 @@ const Tabs = ({route}) => {
                     name="HomeStackNavigator"
                     component={HomeStackNavigator}
                     initialParams={{
-                        token: route.params.token, 
+                        token: route.params.token,
                         userId: route.params.userId
                     }}
                     options={{
                         tabBarIcon: ({ focused }) => (
-                            <View style={style.tabBarIcon}>
+                            <View style={[style.tabBarIcon]}>
                                 <HomeSVG width={20} height={20} color={focused ? Colors.white : Colors.secondary} />
 
-                                {/* display text on focus */}
-                                {focused && <Text
-                                    style={[style.text, { color: Colors.white }]}
-                                > Accueil</Text>}
+                                
                             </View>
                         )
                     }}
@@ -79,10 +79,7 @@ const Tabs = ({route}) => {
                             <View style={style.tabBarIcon}>
                                 <SearchSVG width={20} height={20} color={focused ? Colors.white : Colors.secondary} />
 
-                                {/* display text on focus */}
-                                {focused && <Text
-                                    style={[style.text, { color: Colors.white }]}
-                                > Rechercher </Text>}
+                                
                             </View>
                         )
                     }}
@@ -93,7 +90,7 @@ const Tabs = ({route}) => {
                     name="DemandStackNavigator"
                     component={DemandStackNavigator}
                     initialParams={{
-                        token: route.params.token, 
+                        token: route.params.token,
                         userId: route.params.userId
                     }}
                     options={{
@@ -101,10 +98,7 @@ const Tabs = ({route}) => {
                             <View style={style.tabBarIcon}>
                                 <ShoppingCard width={20} height={20} color={focused ? Colors.white : Colors.secondary} />
 
-                                {/* display text on focus */}
-                                {focused && <Text
-                                    style={[style.text, { color: Colors.white }]}
-                                > Demandes</Text>}
+                               
                             </View>
                         )
                     }}
@@ -115,7 +109,7 @@ const Tabs = ({route}) => {
                     name="ProfilStackNavigator"
                     component={ProfilStackNavigator}
                     initialParams={{
-                        token: route.params.token, 
+                        token: route.params.token,
                         userId: route.params.userId
                     }}
                     options={{
@@ -123,10 +117,7 @@ const Tabs = ({route}) => {
                             <View style={style.tabBarIcon}>
                                 <ProfilSVG width={20} height={20} color={focused ? Colors.white : Colors.secondary} />
 
-                                {/* display text on focus */}
-                                {focused && <Text
-                                    style={[style.text, { color: Colors.white }]}
-                                > Profil </Text>}
+                               
                             </View>
                         )
                     }}
@@ -146,9 +137,15 @@ const style = StyleSheet.create({
     },
     tabBarIcon: {
         flex: 1,
+        flexGrow: 1,
         flexDirection: "column",
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
+        height: "100%"
+    },
+    indicator: {
+        height: 13,
+        backgroundColor: Colors.white
     }
 })
 

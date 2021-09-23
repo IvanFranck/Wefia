@@ -60,8 +60,8 @@ export default function First({ navigation, route }) {
                 ...route.params,
                 second: {
                     "location": location,
-                    "birthdayDate": formatDate,
-                    "birthdayPlace": birthdayPlace
+                    "birthDay": formatDate,
+                    "birthPlace": birthdayPlace
                 }
             });
         } else {
