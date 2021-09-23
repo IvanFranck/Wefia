@@ -2,24 +2,11 @@ import React, { useState, useEffect } from "react"
 import { Pressable, StyleSheet, Image, Text, View } from "react-native";
 import { Colors, Typography } from "../Style";
 import Location from "./SVG/Location";
-import Star from "./SVG/Star";
 
-export default function ServiceProviderCard({  navigation, data  }) {
-
-
-    const getAge = () => {
-        let age = 0;
-        const userBirthYear = new Date(data.serviceProvider.birthdayDate).getFullYear();
-        const currentYear = new Date().getFullYear();
-
-        age = currentYear - userBirthYear;
-
-        return age;
-
-    }
+export default function ServiceProviderCardSimplified({ navigation, data }) {
 
     return (
-        <Pressable onPress={()=>navigation.navigate("ContactSP", {info: data.serviceProvider})} style={styles.card}>
+        <Pressable style={styles.card}>
 
             {/* header */}
             <View style={styles.header}>
@@ -30,19 +17,19 @@ export default function ServiceProviderCard({  navigation, data  }) {
                     <Image
                         style={styles.image}
                         source={{
-                            uri: `${data.serviceProvider.profilePicture}`,
+                            uri: `${data.item.profilePicture}`
                         }}
                     />
 
                     {/* description */}
                     <View style={styles.description}>
-                        <Text style={[Typography.default, { fontFamily: "Montserrat_Bold" }]}>{data.serviceProvider.firstName + " " + data.serviceProvider.lastName}</Text>
+                        <Text style={[Typography.default, { fontFamily: "Montserrat_Bold" }]}>{data.item.firstName + " " + data.item.lastName }</Text>
                         <View style={styles.personnalInfo}>
                             <Location
                                 width={15}
                                 height={18}
                                 stroke={Colors.secondary}
-                                color= {Colors.secondary}
+                                color={Colors.secondary}
                                 secondFillColor={Colors.white}
                             />
                             <Text
@@ -53,7 +40,7 @@ export default function ServiceProviderCard({  navigation, data  }) {
                                         fontFamily: "Montserrat_Regular"
                                     }
                                 ]}
-                            >{data.serviceProvider.location}</Text>
+                            >{data.item.location}</Text>
                         </View>
                     </View>
 
@@ -62,52 +49,19 @@ export default function ServiceProviderCard({  navigation, data  }) {
 
                 {/* marks */}
                 <View style={[styles.marks]}>
-                    <Star width={10} height={10} color={Colors.primary} fill={Colors.primary} />
+
                     <Text
                         style={[
-                            Typography.detail,
+                            Typography.default,
                             {
-                                fontFamily: "Montserrat_Regular",
-                                marginLeft: 4,
+                                fontFamily: "Montserrat_Bold",
                                 fontSize: 10
                             }
                         ]}
-                    >0</Text>
-                    <Text
-                        style={[
-                            Typography.detail,
-                            {
-                                fontFamily: "Montserrat_Regular",
-                                fontSize: 10
-                            }
-                        ]}
-                    > ( 0 vote )</Text>
+                    >{data.item.service}</Text>
                 </View>
             </View>
 
-            {/* footer */}
-            <View style={styles.footer}>
-                <Text
-                    style={[
-                        Typography.default,
-                        {
-                            fontFamily: "Montserrat_Bold",
-                            fontSize: 10
-                        }
-                    ]}
-                >{data.serviceProvider.service}</Text>
-                <View>
-                    <Text
-                        style={[
-                            Typography.detail,
-                            {
-                                fontFamily: "Montserrat_Regular",
-                                fontSize: 10
-                            }
-                        ]}
-                    >{getAge() + " ans"}</Text>
-                </View>
-            </View>
 
         </Pressable>
     )
@@ -121,8 +75,9 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         width: "100%",
         flex: 1,
+        flexGrow: 0.06,
         flexDirection: "column",
-        marginBottom: 16
+        marginBottom: 16,
     },
     image: {
         width: 45,

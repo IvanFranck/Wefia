@@ -16,7 +16,7 @@ exports.demantStatus = {
     waiting: "#fb8b24",
     confirmed: "#e36414",
     rejected: "#9a031e",
-    finished: "#0f4c5c"
+    finished: "#004b23"
 }
 
 exports.Typography = StyleSheet.create({

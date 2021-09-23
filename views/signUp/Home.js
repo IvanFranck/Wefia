@@ -52,7 +52,7 @@ export default class SignUp extends React.Component {
                             <Text style={Typography.default}>Ou</Text>
                             <Pressable
                                 style={styles.btnSecondary}
-                                onPress={() => this.props.navigation.navigate("ProfilePicture",{isServiceProvider: false})}
+                                onPress={() => this.props.navigation.navigate("First",{isServiceProvider: false})}
                             >
                                 <Text style={[styles.btnText, { color: Colors.primary }]}>Demandeur de services</Text>
                             </Pressable>

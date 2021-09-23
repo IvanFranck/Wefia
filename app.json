@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "front-end",
+    "name": "Wefia",
     "slug": "front-end",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/Logo2.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/Logo2.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,16 +17,17 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "buildNumber": "1.0.0",
+      "bundleIdentifier": "com.herokuapp.wefia"
     },
     "android": {
+      "versionCode": 1,
+      "package": "com.herokuapp.wefia",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       }
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     }
   }
 }

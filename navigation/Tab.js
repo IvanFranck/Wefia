@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import Search from '../views/Search/Search';
 import HomeStackNavigator from "./HomeStackNavigator";
-import Profil from '../views/Profil/Profil';
+import ProfilStackNavigator from '../navigation/ProfilStackNavigator';
 import DemandStackNavigator from '../navigation/DemandStackNavigator';
 import * as Font from "expo-font";
 import { Colors } from '../Style';
@@ -14,9 +14,11 @@ import ProfilSVG from "../components/SVG/Profil";
 
 
 
-const Tab = createBottomTabNavigator();
+const Tab = createMaterialTopTabNavigator();
 
-const Tabs = () => {
+const Tabs = ({ route }) => {
+
+    // get userId and token from log in view and pass them to children screens
 
     const [fontLoaded, loadFonts] = useState(false);
 
@@ -33,16 +35,19 @@ const Tabs = () => {
     if (fontLoaded) {
         return (
             <Tab.Navigator
+                tabBarPosition="bottom"
                 screenOptions={{
                     tabBarShowLabel: false,
                     headerShown: false,
                     tabBarStyle: {
-                        position: "absolute",
+                        width: "100%",
                         bottom: 0,
                         height: 55,
                         backgroundColor: Colors.primary
                     },
-                    tabBarHideOnKeyboard: true
+                    tabBarHideOnKeyboard: true,
+                    tabBarIndicator: ()=>{return null}
+
                 }}
             >
 
@@ -50,15 +55,16 @@ const Tabs = () => {
                 <Tab.Screen
                     name="HomeStackNavigator"
                     component={HomeStackNavigator}
+                    initialParams={{
+                        token: route.params.token,
+                        userId: route.params.userId
+                    }}
                     options={{
                         tabBarIcon: ({ focused }) => (
-                            <View style={style.tabBarIcon}>
+                            <View style={[style.tabBarIcon]}>
                                 <HomeSVG width={20} height={20} color={focused ? Colors.white : Colors.secondary} />
 
-                                {/* display text on focus */}
-                                {focused && <Text
-                                    style={[style.text, { color: Colors.white }]}
-                                > Accueil</Text>}
+                                
                             </View>
                         )
                     }}
@@ -73,10 +79,7 @@ const Tabs = () => {
                             <View style={style.tabBarIcon}>
                                 <SearchSVG width={20} height={20} color={focused ? Colors.white : Colors.secondary} />
 
-                                {/* display text on focus */}
-                                {focused && <Text
-                                    style={[style.text, { color: Colors.white }]}
-                                > Rechercher </Text>}
+                                
                             </View>
                         )
                     }}
@@ -86,15 +89,16 @@ const Tabs = () => {
                 <Tab.Screen
                     name="DemandStackNavigator"
                     component={DemandStackNavigator}
+                    initialParams={{
+                        token: route.params.token,
+                        userId: route.params.userId
+                    }}
                     options={{
                         tabBarIcon: ({ focused }) => (
                             <View style={style.tabBarIcon}>
                                 <ShoppingCard width={20} height={20} color={focused ? Colors.white : Colors.secondary} />
 
-                                {/* display text on focus */}
-                                {focused && <Text
-                                    style={[style.text, { color: Colors.white }]}
-                                > Demandes</Text>}
+                               
                             </View>
                         )
                     }}
@@ -102,17 +106,18 @@ const Tabs = () => {
 
                 {/* profil */}
                 <Tab.Screen
-                    name="Profil"
-                    component={Profil}
+                    name="ProfilStackNavigator"
+                    component={ProfilStackNavigator}
+                    initialParams={{
+                        token: route.params.token,
+                        userId: route.params.userId
+                    }}
                     options={{
                         tabBarIcon: ({ focused }) => (
                             <View style={style.tabBarIcon}>
                                 <ProfilSVG width={20} height={20} color={focused ? Colors.white : Colors.secondary} />
 
-                                {/* display text on focus */}
-                                {focused && <Text
-                                    style={[style.text, { color: Colors.white }]}
-                                > Profil </Text>}
+                               
                             </View>
                         )
                     }}
@@ -132,9 +137,15 @@ const style = StyleSheet.create({
     },
     tabBarIcon: {
         flex: 1,
+        flexGrow: 1,
         flexDirection: "column",
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
+        height: "100%"
+    },
+    indicator: {
+        height: 13,
+        backgroundColor: Colors.white
     }
 })
 
