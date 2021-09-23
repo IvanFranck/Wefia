@@ -6,11 +6,10 @@ import { Colors, Typography } from "../../Style";
 import ShowProfileImage from "../../components/ShowProfileImage"
 import Camera from "../../components/SVG/Camera";
 import Gallery from "../../components/SVG/Gallery";
+import { Request } from "../../components/Request";
 
-import DeviceStorage from "../../services/DeviceStorage";
 
-
-export default function ProfilePicture({navigation, route}) {
+export default function ProfilePicture({ navigation, route }) {
 
     // handle font loading state
     const [fontLoaded, loadFont] = useState(false);
@@ -26,7 +25,7 @@ export default function ProfilePicture({navigation, route}) {
             });
             await loadFont(true);
 
-        })() 
+        })();
     }, []);
 
     const pickImageFromGallery = async () => {
@@ -69,15 +68,20 @@ export default function ProfilePicture({navigation, route}) {
         }
     }
 
- 
+
 
 
     const AddProfilePricture = async () => {
         if (image) {
-            DeviceStorage.saveItem("picture_image_uri", image.uri);
-            // add profil img in user data base account
 
-            navigation.navigate("tab");
+            await Request.post(`/user/update/profilePicture/${route.params.userId}`, { "profilePicture": image.uri })
+                .then(resp => {
+                    navigation.navigate("tab", { userId: resp.data.user._id });
+                }).catch(error => {
+                    console.error("error :", error);
+                    throw error;
+                })
+
         }
     }
 

@@ -56,7 +56,7 @@ const Search = () => {
                 <View style={styles.searchBar}>
                     <SearchIcon width={20} height={20} color={Colors.primary} />
                     <TextInput
-                        placeholder="Recherche"
+                        placeholder="Rechercher un service"
                         selectionColor={Colors.bgColor}
                         keyboardType="default"
                         onChangeText={handleSearchInputChange}

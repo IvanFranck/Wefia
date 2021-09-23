@@ -49,7 +49,7 @@ export default function First({ navigation, route }) {
         setShow(false);
 
         let template = new Date(currentDate);
-        let newFormatDate = template.getFullYear() + " / " + (template.getMonth() + 1) + " / " + template.getDate();
+        let newFormatDate = template.getFullYear() + "/" + (template.getMonth() + 1) + "/" + template.getDate();
         setformatDate(newFormatDate);
     }
 
@@ -69,8 +69,8 @@ export default function First({ navigation, route }) {
                 ...route.params,
                 second: {
                     "location": location,
-                    "birthdayDate": formatDate,
-                    "birthdayPlace": birthdayPlace
+                    "birthDay": formatDate,
+                    "birthPlace": birthdayPlace
                 }
             });
         }

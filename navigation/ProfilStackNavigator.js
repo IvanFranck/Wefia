@@ -18,12 +18,10 @@ export default function ProfilStackNavigator({ route }) {
             }}
         >
             <Stack.Screen name="profil" component={Profil} initialParams={{
-                token: route.params.token,
                 userId: route.params.userId
             }} />
 
             {/* <Stack.Screen name="ContactSP" component={ServciceProviderProfil}  initialParams={{
-                token: route.params.token,
                 userId: route.params.userId
             }}/> */}
         </Stack.Navigator>

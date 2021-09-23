@@ -19,11 +19,9 @@ export default function DemandStackNavigator ({route}) {
             }}
         >
             <Stack.Screen name="Demand"  component={Demand} initialParams={{
-                token: route.params.token,
                 userId: route.params.userId
             }}/>
             <Stack.Screen name="DemandDetails" component={DemandDetails} initialParams={{
-                token: route.params.token,
                 userId: route.params.userId
             }}/>
         </Stack.Navigator>

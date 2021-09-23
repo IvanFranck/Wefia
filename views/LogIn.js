@@ -56,7 +56,7 @@ export default function LogIn({ route, navigation }) {
                 password
             }).then(response => {
                 DeviceStorage.saveItem("id_token", response.data.token);
-                navigation.navigate("tab",  { token: response.data.token, userId: response.data.userId})
+                navigation.navigate("tab",  { token: response.data.token, userId: response.data.userId});
             }).catch(error => {
                 console.error("error :", error);
                 throw error;

@@ -56,7 +56,6 @@ const Tabs = ({ route }) => {
                     name="HomeStackNavigator"
                     component={HomeStackNavigator}
                     initialParams={{
-                        token: route.params.token,
                         userId: route.params.userId
                     }}
                     options={{
@@ -90,7 +89,6 @@ const Tabs = ({ route }) => {
                     name="DemandStackNavigator"
                     component={DemandStackNavigator}
                     initialParams={{
-                        token: route.params.token,
                         userId: route.params.userId
                     }}
                     options={{
@@ -109,7 +107,6 @@ const Tabs = ({ route }) => {
                     name="ProfilStackNavigator"
                     component={ProfilStackNavigator}
                     initialParams={{
-                        token: route.params.token,
                         userId: route.params.userId
                     }}
                     options={{

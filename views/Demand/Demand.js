@@ -12,12 +12,13 @@ const Demand = function ({ navigation, route }) {
 
     const [demands, setDemands] = useState(null);
 
+
     useEffect(() => {
         
         (async () => {
-            await Request.get("/command")
+            await Request.get(`/command/userId/${route.params.userId}`)
                 .then(resp => {
-                    setDemands(resp.data);
+                    setDemands(resp.data.commands);
                 })
                 .catch(err => console.error("erreur :", err))
         })();
@@ -34,7 +35,7 @@ const Demand = function ({ navigation, route }) {
                 </View>
 
                 <View style={styles.demandContainer}>
-                    {demands.map( demand => {
+                    { demands && demands.map( demand => {
                         return (
                             <DemandCard demand={demand} navigation={navigation} key={demand._id}/>
                         )
