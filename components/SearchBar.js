@@ -1,29 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { Pressable, TextInput, StyleSheet } from "react-native";
+import { Pressable, TextInput, Text, View, StyleSheet } from "react-native";
 import * as Font from "expo-font";
 import SearchIcon from "./SVG/Search";
-import { Colors } from "../Style";
+import { Colors, Typography } from "../Style";
 
 
-export default function SearchBar() {
+export default function SearchBar({navigation}) {
 
     //handle search input
     const [searchText, setSearchText] = useState("")
 
 
     return (
-        <Pressable style={styles.searchBar}>
-            <TextInput
+        <Pressable style={styles.searchBar} onPress={()=>navigation.navigate("Search")}>
+            {/* <TextInput
                 placeholder="trouver le en quelques mots"
                 selectionColor={Colors.bgColor}
                 keyboardType="default"
                 onChangeText={text => setSearchText(text)}
                 defaultValue={searchText}
                 style={styles.searchInput}
-            />
-            <Pressable style={styles.searchBtn}>
-                <SearchIcon width={20} height={20} color={Colors.white} />
+                onPressOut={()=>navigation.navigate("Search")}
+            /> */}
+            <Pressable onPress={()=>navigation.navigate("Search")} style={styles.searchInput}>
+                <Text style={[Typography.detail]} >trouvez le en quelques mots</Text>
             </Pressable>
+            <View  style={styles.searchBtn}>
+                <SearchIcon width={20} height={20} color={Colors.white} />
+            </View>
         </Pressable>
     );
 }
@@ -33,7 +37,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         justifyContent: "space-between",
-        flexGrow: 1.3,
+        flexGrow: 1.8,
         borderWidth: 1,
         borderRadius: 10,
         marginTop: 40,
@@ -56,5 +60,6 @@ const styles = StyleSheet.create({
         fontFamily: "Montserrat_Regular",
         paddingLeft: 8,
         flexGrow: 0.9,
+        paddingVertical: 8
     }
 })

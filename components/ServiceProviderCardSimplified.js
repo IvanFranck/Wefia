@@ -6,7 +6,13 @@ import Location from "./SVG/Location";
 export default function ServiceProviderCardSimplified({ navigation, data }) {
 
     return (
-        <Pressable style={styles.card}>
+        <Pressable
+            onPress={() => navigation.navigate(
+                "HomeStackNavigator",
+                { screen: "ContactSP", params: { info: data.item } }
+            )}
+            style={styles.card}
+        >
 
             {/* header */}
             <View style={styles.header}>
@@ -23,7 +29,7 @@ export default function ServiceProviderCardSimplified({ navigation, data }) {
 
                     {/* description */}
                     <View style={styles.description}>
-                        <Text style={[Typography.default, { fontFamily: "Montserrat_Bold" }]}>{data.item.firstName + " " + data.item.lastName }</Text>
+                        <Text style={[Typography.default, { fontFamily: "Montserrat_Bold" }]}>{data.item.firstName + " " + data.item.lastName}</Text>
                         <View style={styles.personnalInfo}>
                             <Location
                                 width={15}

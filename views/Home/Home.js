@@ -55,7 +55,7 @@ export default function Home({navigation, route}) {
                     {/* header */}
                     <View style={styles.header}>
                         <View style={styles.headerLeft}>
-                            <Pressable style={styles.profilPicture}>
+                            <Pressable style={styles.profilPicture} onPress={()=>navigation.navigate("ProfilStackNavigator")}>
                                 <Image style={styles.userImg} source={{uri: user.profilePicture}} />
                             </Pressable>
                             <Text>{`Salut ${user.firstName}`}</Text>
@@ -70,7 +70,7 @@ export default function Home({navigation, route}) {
 
                     {/* Search bar */}
 
-                    <SearchBar />
+                    <SearchBar navigation={navigation} />
 
                     {/* service provider profils */}
 

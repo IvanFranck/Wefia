@@ -9,7 +9,7 @@ import ServiceProviderCardSimplified from "../../components/ServiceProviderCardS
 
 
 
-const Search = () => {
+const Search = ({navigation}) => {
 
     const [data, setData] = useState(null);
     const [fulldata, setFullData] = useState(null);
@@ -69,7 +69,7 @@ const Search = () => {
             <View style={styles.body}>
                 <FlatList 
                     data={data}
-                    renderItem = { (data) => {return (<ServiceProviderCardSimplified data={data} /> )}}
+                    renderItem = { (data) => {return (<ServiceProviderCardSimplified navigation={navigation} data={data} /> )}}
                     keyExtractor={item => item._id}
                 />
             </View>

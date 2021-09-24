@@ -59,7 +59,8 @@ export default function LogIn({ route, navigation }) {
                 navigation.navigate("tab",  { token: response.data.token, userId: response.data.userId});
             }).catch(error => {
                 console.error("error :", error);
-                throw error;
+                Alert.alert("identifiants incorrects");
+                pressLogInbBtn(false)
             })
         }else {
             Alert.alert("remplir tous les champs SVP")
