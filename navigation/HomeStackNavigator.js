@@ -18,7 +18,6 @@ export default function HomeStackNavigator({ route }) {
             }}
         >
             <Stack.Screen name="home" component={Home} initialParams={{
-                token: route.params.token,
                 userId: route.params.userId
             }} />
 

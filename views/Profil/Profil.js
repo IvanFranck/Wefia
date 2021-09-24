@@ -22,7 +22,7 @@ const Profil = ({ route }) => {
     }, []);
 
     const getAge = () => {
-        const birthYear = new Date(userInfo.birthdayDate).getFullYear();
+        const birthYear = new Date(userInfo.birthDay).getFullYear();
         const currentYear = new Date(Date.now()).getFullYear();
 
         return currentYear - birthYear;

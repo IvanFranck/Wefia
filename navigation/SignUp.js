@@ -81,8 +81,8 @@ export default function SignUp() {
                         },
                         second: {
                             "location": "",
-                            "birthdayDate": "",
-                            "birthdayPlace": ""
+                            "birthDay": "",
+                            "birthPlace": ""
                         },
                         third: {
                             "RCCId": "",
@@ -103,8 +103,8 @@ export default function SignUp() {
                         },
                         second: {
                             "location": "",
-                            "birthdayDate": "",
-                            "birthdayPlace": ""
+                            "birthDay": "",
+                            "birthPlace": ""
                         },
                         third: {
                             "RCCId": "",

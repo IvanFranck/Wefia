@@ -31,7 +31,6 @@ export default function Third({ navigation, route }) {
                 Montserrat_Regular: require("../../assets/fonts/MontserratRegular.ttf")
             });
             loadFont(true);
-            console.log("params : ", route.params)
         })();
     }, []);
 
@@ -45,15 +44,14 @@ export default function Third({ navigation, route }) {
 
     const signUp = async () => {
         const data = { ...route.params.first, ...route.params.second, mailAddress, password };
-        console.log("data ", data);
-        // await Request.post("/user/signUp", data)
-        //     .then((response) =>{
-        //         console.log(response);
-        //     })
-        //     .catch((error) =>{
-        //         console.log("erreur lors de l'envoie de la requete ",error);
-        //         throw error;
-        //     });
+        await Request.post("/user/signUp", data)
+            .then((response) =>{
+                navigation.navigate("ProfilePicture",  {  userId: response.data.user._id})
+            })
+            .catch((error) =>{
+                console.log("erreur lors de l'envoie de la requete ",error);
+                throw error;
+            });
         
     }   
 
